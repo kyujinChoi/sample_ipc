@@ -1,0 +1,12 @@
+syntax = "proto3";
+package umsg;
+
+// option java_package = "com.rubicom.vcf";
+// option java_outer_classname="UmsgProtos";
+
+message sample
+{
+    uint32 _clients=1;
+    uint32 _reader_cnt=2;
+    string _msg=3;
+}

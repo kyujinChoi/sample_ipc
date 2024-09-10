@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(sample_ipc LANGUAGES CXX)
+
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(LibXml2 REQUIRED)
+
+set(INCL ${CMAKE_SOURCE_DIR}/include )
+add_subdirectory(${CMAKE_SOURCE_DIR}/lib/IPComm)
+set(INCL ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/app ${LIBXML2_INCLUDE_DIR})
+set(LIBS  pthread IPComm)
+set(DEPENDS IPComm)
+add_subdirectory(${CMAKE_SOURCE_DIR}/app/server)
+add_subdirectory(${CMAKE_SOURCE_DIR}/app/client)
+
+
+
+
