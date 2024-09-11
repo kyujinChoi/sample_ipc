@@ -23,9 +23,9 @@ int main()
         usleep(100*1000);
         recv_msg = ipc->ReadBody();
         std::cout << "-------------------------\n";
-        std::cout << recv_msg->body->_clients() << std::endl;
-        std::cout << recv_msg->body->_reader_cnt() << std::endl;
-        std::cout << recv_msg->body->_msg() << std::endl;
+        std::cout << "clients : " << recv_msg->body->_clients() << std::endl;
+        std::cout << "reader_cnt : " << recv_msg->body->_reader_cnt() << std::endl;
+        std::cout << "msg : " << recv_msg->body->_msg() << std::endl;
 
         if(cnt > 100000)
             break;

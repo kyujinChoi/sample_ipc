@@ -15,20 +15,27 @@ int main()
     std::string buffer = "class test data";
     int cnt = 0;
     ipc = new IPCWriter(1234);
+    // umsg::sample send_msg;
     shData_t *sh_data;
-
+    SharedData send_msg;
     while(1)
     {
         usleep(100*1000);
-        sh_data = ipc->getSharedData();
-        buffer = "class test data" + std::to_string(cnt++);
         // ipc->ReadHeader(sh_data->header);
+        sh_data = ipc->getSharedData();
+        std::string buf = buffer + std::to_string(cnt++);
+        // send_msg.body->type = cnt * 10;
+        std::cout << "-----------------------\n";
+        send_msg.body->set__clients(cnt);
+        send_msg.body->set__reader_cnt(cnt + 1);
+        send_msg.body->set__msg(buf);
+        // send_msg.body->size = send_msg.body->msg->ByteSizeLong();
+
+        ipc->writeBody(send_msg.body);
+        std::cout << "clients : " << sh_data->body->_clients() << std::endl;
+        std::cout << "reader_cnt : " << sh_data->body->_reader_cnt() << std::endl;
+        std::cout << "msg : " << sh_data->body->_msg() << std::endl;
         
-        ipc->writeBody((void*)buffer.c_str(), sizeof(buffer));
-        std::cout << sh_data->header->clients << std::endl;
-        std::cout << sh_data->header->reader_cnt << std::endl;
-        std::cout << sizeof(buffer) << std::endl;
-        std::cout << buffer << std::endl << std::endl;
         if(cnt > 100000)
             break;
     }
