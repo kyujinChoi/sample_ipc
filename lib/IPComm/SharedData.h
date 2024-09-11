@@ -2,7 +2,6 @@
 #ifndef _IPC_DATA_H_
 #define _IPC_DATA_H_
 
-
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include "Parameter/Parameter.h"
@@ -22,30 +21,45 @@
 using namespace google::protobuf::io;
 // writer cares semaphores. create them when initializing
 #pragma pack(push, 1)
-typedef struct SharedStatus
+typedef struct SharedData
 {
-    int* clients;
-    int* reader_cnt;
-    SharedStatus()
+    typedef struct Header
     {
-        void *block = malloc(sizeof(int) * 2);
+        int clients;
+        int reader_cnt;
+    }header_t;
+    typedef struct Body
+    {
+        int type;
+        int size;
+    } body_t;
+    header_t *header;
+    body_t *body;
+    umsg::sample msg;
+    SharedData()
+    {
+        void *block = malloc(sizeof(header_t) + 2 * sizeof(int) + MAX_IPC_BUF);
         if (block == nullptr) 
         {
             std::cerr << "Failed to allocate memory for SharedData!" << std::endl;
             exit(EXIT_FAILURE);
         }
-        memset(block, 0, sizeof(int) * 2);
-        clients = (int *)block;
-        reader_cnt = (int *)((char*)block + sizeof(int));
+        memset(block, 0, sizeof(header_t) + 2 * sizeof(int) + MAX_IPC_BUF);
+        header = (header_t *)block;
+        body = (body_t *)((char*)block + sizeof(header_t));
+        // static umsg::sample *tmp = new umsg::sample();
+        // body->msg = tmp;
+        // std::memcpy(body->msg, tmp, sizeof(umsg::sample));
     }
-    ~SharedStatus()
+    
+    ~SharedData()
     {
-        if (clients != nullptr) 
-            free(clients);
-        if (reader_cnt != nullptr) 
-            free(reader_cnt);
+        if (header != nullptr) 
+            free(header);
+        if (body != nullptr) 
+            free(body);
     }
-} sh_status_t;
+} shData_t;
 #pragma pack(pop)
 
 #endif

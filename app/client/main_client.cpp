@@ -15,16 +15,19 @@ int main()
     std::string buffer = "class test data";
     int cnt = 0;
     ipc = new IPCReader(1234);
+    shData_t *recv_msg;
     // umsg::sample send_msg;
     while(1)
     {
         // ipc->ReadHeader(sh_data->header);
         usleep(100*1000);
-        ipc->ReadBody();
+        recv_msg = ipc->ReadBody();
         std::cout << "-------------------------\n";
-        std::cout << ipc->msg._clients() << std::endl;
-        std::cout << ipc->msg._reader_cnt() << std::endl;
-        std::cout << ipc->msg._msg() << std::endl;
+        std::cout << recv_msg->body->type << std::endl;
+        std::cout << recv_msg->body->size << std::endl;
+        std::cout << recv_msg->msg._clients() << std::endl;
+        std::cout << recv_msg->msg._reader_cnt() << std::endl;
+        std::cout << recv_msg->msg._msg() << std::endl;
 
         if(cnt > 100000)
             break;

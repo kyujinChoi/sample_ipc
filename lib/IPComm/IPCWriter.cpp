@@ -8,24 +8,23 @@ IPCWriter::IPCWriter(int key)
     param.insertParam("sem_update_mtx", "/ipc_update_mtx");
     param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
 
-    // sh_data = new shData_t();
-    
-    
-    msg.set__clients(10);
-    msg.set__reader_cnt(11);
-    msg.set__msg("send msg");
-    pkt_size = msg.ByteSizeLong();
+    sh_data = new shData_t();
+    pkt_size = 2*sizeof(int);
     pkt = new char[pkt_size];
-    aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
-    coded_output = new google::protobuf::io::CodedOutputStream(aos);
-    
+    // aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
+    // coded_output = new google::protobuf::io::CodedOutputStream(aos);
+
     init_sem(this);
     Init();
 }
 IPCWriter::~IPCWriter() { Free(); };
+shData_t *IPCWriter::getSharedData()
+{
+    return sh_data;
+}
 int IPCWriter::Init()
 {
-    if ((shmid = shmget((key_t)param.getParamInt("key"), 10000, IPC_CREAT | IPC_EXCL | 0666)) == -1)
+    if ((shmid = shmget((key_t)param.getParamInt("key"), sizeof(SharedData::Header) + 2*sizeof(int) + MAX_IPC_BUF, IPC_CREAT | IPC_EXCL | 0666)) == -1)
     {
         char bufferKey[128];
         sprintf(bufferKey, "0x%08x", param.getParamInt("key"));
@@ -53,7 +52,7 @@ int IPCWriter::Init()
                 perror("Shmctl failed");
         }
 
-        shmid = shmget((key_t)param.getParamInt("key"), 10000, IPC_CREAT | 0666);
+        shmid = shmget((key_t)param.getParamInt("key"), sizeof(SharedData::Header) + 2*sizeof(int) + MAX_IPC_BUF, IPC_CREAT | 0666);
         if (-1 == shmid)
         {
             printf("IpcData Create error\n");
@@ -71,101 +70,93 @@ int IPCWriter::Init()
 }
 int IPCWriter::readHeader()
 {
-    // sem_wait(ticket_mtx);
-    // memcpy((char *)sh_data->header, (char *)data_addr, sizeof(SharedData::Header));
-    // sem_post(ticket_mtx);
+    sem_wait(ticket_mtx);
+    memcpy((char *)sh_data->header, (char *)data_addr, sizeof(SharedData::Header));
+    sem_post(ticket_mtx);
 
     return 0;
 }
 int IPCWriter::writeHeader()
 {
-    // sem_wait(ticket_mtx);
-    // memcpy((char *)data_addr, (char *)sh_data->header, sizeof(SharedData::Header));
-    // sem_post(ticket_mtx);
+    sem_wait(ticket_mtx);
+    memcpy((char *)data_addr, (char *)sh_data->header, sizeof(SharedData::Header));
+    sem_post(ticket_mtx);
 
     return 0;
 }
-int IPCWriter::writeBody(void *data, int size)
+int IPCWriter::writeBody(SharedData::Body *body, umsg::sample msg)
 {
-    // size_t data_len = strlen((char *)data) + 1;
-    
-    // int msg_size = size;
-    // std::cout << "size : " << size << std::endl;
-    // std::cout << "data : " << (char*)data << std::endl;
-    int len = size;
+    memcpy(sh_data->body, body, 2 * sizeof(int));
+    sh_data->msg = msg;
+    serialize();
     updateClients();
 
     start_write_sem();
-    memcpy(data_addr, data, pkt_size);
-    // memcpy(data_addr+ sizeof(SharedData::Header) + sizeof(int), (void *)data, size);
+    memcpy(data_addr + sizeof(SharedData::Header), sh_data->body, 2 * sizeof(int));
+    memcpy(data_addr + sizeof(SharedData::Header) + 2 * sizeof(int), pkt, sh_data->body->size);
     end_write_sem();
     return 0;
 } 
-int IPCWriter::writeBody()
+void IPCWriter::serialize()
 {
-    int siz = msg.ByteSizeLong();
-    if (siz > pkt_size) {
-        // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
-        delete[] pkt;
-        pkt = new char[siz];
-        pkt_size = siz;
-        delete coded_output;
-        delete aos;
-        aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
-        coded_output = new google::protobuf::io::CodedOutputStream(aos);
-        pkt_size = siz;
-    }
-
-    msg.SerializeToCodedStream(coded_output);
-
-    updateClients();
-
-    start_write_sem();
-    memcpy(data_addr, pkt, siz);  // 이 부분에서 복사하는 크기를 더 명확히 할 수 있음
-    end_write_sem();
-    return 0;
+    int siz = sh_data->msg.ByteSizeLong();
+    google::protobuf::io::ArrayOutputStream aos(pkt, siz);
+    CodedOutputStream *coded_output = new CodedOutputStream(&aos);
+    // if (siz  > pkt_size) {
+    //     // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
+    //     delete[] pkt;
+    //     pkt = new char[siz];
+    //     pkt_size = siz;
+    //     delete coded_output;
+    //     delete aos;
+    //     aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
+    //     coded_output = new google::protobuf::io::CodedOutputStream(aos);
+    // }
+    sh_data->body->size = siz;
+    sh_data->msg.SerializeToCodedStream(coded_output);
+    return;
 }
 void IPCWriter::updateClients()
 {
-    // static int prev_clients = 0;
-    // readHeader();
-    // int cur_clients = sh_data->header->clients;
+    static int prev_clients = 0;
+    readHeader();
+    int cur_clients = sh_data->header->clients;
 
-    // std::vector<int> erase_idx;
-    // for (int i = 0; i < vec_client_idx.size(); i++)
-    // {
-    //     std::string sem_name = param.getParamStr("sem_update_mtx") + std::to_string(vec_client_idx[i]);
-    //     vec_update_mtx[i] = sem_open(sem_name.c_str(), 0);
-    //     if (vec_update_mtx[i] == SEM_FAILED)
-    //     {
-    //         if (errno == ENOENT)
-    //         {
-    //             coconut::coconut.cout("Client Leaved!\n", coconut::Color::YELLOW, coconut::Style::BOLD);
-    //             erase_idx.push_back(i);
-    //         }
-    //     }
-    // }
-    // for (int i = 0; i < erase_idx.size(); i++)
-    // {
-    //     vec_update_mtx.erase(vec_update_mtx.begin() + erase_idx[i]);
-    //     vec_client_idx.erase(vec_client_idx.begin() + erase_idx[i]);
-    // }
+    std::vector<int> erase_idx;
+    for (int i = 0; i < vec_client_idx.size(); i++)
+    {
+        std::string sem_name = param.getParamStr("sem_update_mtx") + std::to_string(vec_client_idx[i]);
+        vec_update_mtx[i] = sem_open(sem_name.c_str(), 0);
+        if (vec_update_mtx[i] == SEM_FAILED)
+        {
+            if (errno == ENOENT)
+            {
+                coconut::coconut.cout("Client Leaved!\n", coconut::Color::YELLOW, coconut::Style::BOLD);
+                erase_idx.push_back(i);
+            }
+        }
+    }
+    for (int i = 0; i < erase_idx.size(); i++)
+    {
+        vec_update_mtx.erase(vec_update_mtx.begin() + erase_idx[i]);
+        vec_client_idx.erase(vec_client_idx.begin() + erase_idx[i]);
+    }
 
-    // for (int i = prev_clients; i < cur_clients; i++)
-    // {
-    //     static sem_t *sem = nullptr;
-    //     std::string sem_name = param.getParamStr("sem_update_mtx") + std::to_string(i);
-    //     sem = sem_open(sem_name.c_str(), O_CREAT, 0644, 1);
-    //     if (sem == SEM_FAILED)
-    //     {
-    //         perror("sem_open failed");
-    //         exit(-1);
-    //     }
-    //     coconut::coconut.cout("Client Entered!\n", coconut::Color::GREEN, coconut::Style::BOLD);
-    //     vec_update_mtx.push_back(sem);
-    //     vec_client_idx.push_back(i);
-    // }
-    // prev_clients = cur_clients;
+    for (int i = prev_clients; i < cur_clients; i++)
+    {
+        static sem_t *sem = nullptr;
+        std::string sem_name = param.getParamStr("sem_update_mtx") + std::to_string(i);
+        sem = sem_open(sem_name.c_str(), O_CREAT, 0644, 1);
+        if (sem == SEM_FAILED)
+        {
+            perror("sem_open failed");
+            exit(-1);
+        }
+        coconut::coconut.cout("Client Entered!\n", coconut::Color::GREEN, coconut::Style::BOLD);
+        vec_update_mtx.push_back(sem);
+        vec_client_idx.push_back(i);
+    }
+    prev_clients = cur_clients;
 
     return;
 }

@@ -7,9 +7,11 @@ IPCReader::IPCReader(int key)
     param.insertParam("sem_update_mtx", "/ipc_update_mtx");
     param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
 
-    siz = 14;
-    pkt = new char[siz];
-
+    sh_data = new shData_t();
+    pkt_size = 2 * sizeof(int);
+    pkt = new char[pkt_size];
+    // ais = new google::protobuf::io::ArrayInputStream(pkt, 2 * sizeof(int));
+    // coded_input = new google::protobuf::io::CodedInputStream(ais);
     init_sem(this);
     Init();
 }
@@ -27,7 +29,7 @@ int IPCReader::Init()
         printf("Shared Memory Buffer Create Failed...\n");
         return -1;
     }
-    // readerEnter();
+    readerEnter();
 
     // sh_data->resizeBody(sh_data->header->body_size);
 
@@ -35,26 +37,26 @@ int IPCReader::Init()
 }
 int IPCReader::readHeader()
 {
-    // sem_wait(ticket_mtx);
-    // memcpy((char *)sh_data->header, (char *)data_addr, sizeof(SharedData::Header));
-    // sem_post(ticket_mtx);
+    sem_wait(ticket_mtx);
+    memcpy((char *)sh_data->header, (char *)data_addr, sizeof(SharedData::Header));
+    sem_post(ticket_mtx);
 
     return 0;
 }
 int IPCReader::writeHeader()
 {
-    // sem_wait(ticket_mtx);
-    // memcpy((char *)data_addr, (void *)sh_data->header, sizeof(SharedData::Header));
-    // sem_post(ticket_mtx);
+    sem_wait(ticket_mtx);
+    memcpy((char *)data_addr, (void *)sh_data->header, sizeof(SharedData::Header));
+    sem_post(ticket_mtx);
 
     return 0;
 }
 void IPCReader::readerEnter()
 {
     readHeader();
-    // ++sh_data->header->clients;
+    ++sh_data->header->clients;
     writeHeader();
-    // param.insertParam("client_id", sh_data->header->clients - 1);
+    param.insertParam("client_id", sh_data->header->clients - 1);
     static sem_t *st_update_mtx = SEM_FAILED;
     while (st_update_mtx == SEM_FAILED)
     {
@@ -83,28 +85,43 @@ int IPCReader::Free()
 
     return 0;
 }
-void IPCReader::ReadBody()
+shData_t *IPCReader::ReadBody()
 {
-    // wait_for_update();
-    // start_cnt_sem();
-    memcpy(pkt, data_addr, siz);
-    google::protobuf::io::ArrayInputStream ais(pkt, 14);
-    CodedInputStream coded_input(&ais);
-    google::protobuf::io::CodedInputStream::Limit msgLimit = coded_input.PushLimit(14);
-    msg.ParseFromCodedStream(&coded_input);
-    coded_input.PopLimit(msgLimit);
-    // std::cout << msg._clients() << std::endl;
-    // std::cout << msg._reader_cnt() << std::endl;
-    // std::cout << msg._msg() << std::endl;
+    wait_for_update();
+    start_cnt_sem();
+    // google::protobuf::uint32 hdr[2];
+    memcpy(sh_data->body, data_addr + sizeof(SharedData::Header), 2 * sizeof(int));
+    if (sh_data->body->size > pkt_size) 
+    {
+        // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
+        delete[] pkt;
+        pkt = new char[sh_data->body->size];
+        pkt_size = sh_data->body->size;
+    }
+    
     // Print the size stored in sh_data->body
-    // memcpy(sh_data->body->msg, data_addr + sizeof(SharedData::Header) + sizeof(int), sh_data->body->size);
+    
+    memcpy(pkt, data_addr + sizeof(SharedData::Header) + 2 * sizeof(int), sh_data->body->size);
+    deserialize();
     // memcpy(sh_data->body->msg, data_addr + sizeof(SharedData::Header)+ sizeof(int), sh_data->body->size);
     // std::cout << "data_addr + sizeof(SharedData::Header) : " << data_addr + sizeof(SharedData::Header) << std::endl;
-
-    // end_cnt_sem();
-
+    
+    end_cnt_sem();
+    
+    return sh_data;
+}
+void IPCReader::deserialize()
+{
+    umsg::sample *sample_msg = new umsg::sample;
+    google::protobuf::io::ArrayInputStream ais(pkt, sh_data->body->size);
+    CodedInputStream coded_input(&ais);
+    google::protobuf::io::CodedInputStream::Limit msgLimit = coded_input.PushLimit(sh_data->body->size);
+    sample_msg->ParseFromCodedStream(&coded_input);
+    coded_input.PopLimit(msgLimit);
+    sh_data->msg = *sample_msg;
     return;
 }
+
 void IPCReader::init_sem(void *pthis)
 {
     static sem_t *st_write_mtx = nullptr;
@@ -136,7 +153,7 @@ void IPCReader::start_cnt_sem()
     int cnt;
     sem_wait(cnt_mtx);
     readHeader();
-    // cnt = ++sh_data->header->reader_cnt;
+    cnt = ++sh_data->header->reader_cnt;
     writeHeader();
     sem_post(cnt_mtx);
     if (cnt == 1)
@@ -149,7 +166,7 @@ void IPCReader::end_cnt_sem()
     int cnt;
     sem_wait(cnt_mtx);
     readHeader();
-    // cnt = --sh_data->header->reader_cnt;
+    cnt = --sh_data->header->reader_cnt;
     writeHeader();
     sem_post(cnt_mtx);
     if (cnt == 0)
