@@ -20,7 +20,7 @@ public:
     void end_cnt_sem();
     void start_write_sem();
     void end_write_sem();
-    void deserialize();
+    void deserialize(google::protobuf::uint32 *hdr);
 public:
     sem_t *ticket_mtx, *write_mtx, *cnt_mtx, *update_mtx;
     Parameter param;    

@@ -84,36 +84,37 @@ int IPCWriter::writeHeader()
 
     return 0;
 }
-int IPCWriter::writeBody(SharedData::Body *body, umsg::sample msg)
+int IPCWriter::writeBody(umsg::sample *umsg)
 {
-    memcpy(sh_data->body, body, 2 * sizeof(int));
-    sh_data->msg = msg;
-    serialize();
+    *sh_data->body = *umsg;
+    serialize(umsg);
     updateClients();
 
     start_write_sem();
-    memcpy(data_addr + sizeof(SharedData::Header), sh_data->body, 2 * sizeof(int));
-    memcpy(data_addr + sizeof(SharedData::Header) + 2 * sizeof(int), pkt, sh_data->body->size);
+    memcpy(data_addr + sizeof(SharedData::Header), pkt, pkt_size);
     end_write_sem();
     return 0;
 } 
-void IPCWriter::serialize()
+void IPCWriter::serialize(umsg::sample *umsg)
 {
-    int siz = sh_data->msg.ByteSizeLong();
-    google::protobuf::io::ArrayOutputStream aos(pkt, siz);
+    unsigned int siz = umsg->ByteSizeLong();
+    
+    if (siz + 2 > pkt_size) 
+    {
+        // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
+        delete[] pkt;
+        pkt_size = siz + 2;
+        pkt = new char[pkt_size];
+    }
+    // memcpy(sh_data->body, umsg, siz);
+    
+    google::protobuf::io::ArrayOutputStream aos(pkt, pkt_size);
     CodedOutputStream *coded_output = new CodedOutputStream(&aos);
-    // if (siz  > pkt_size) {
-    //     // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
-    //     delete[] pkt;
-    //     pkt = new char[siz];
-    //     pkt_size = siz;
-    //     delete coded_output;
-    //     delete aos;
-    //     aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
-    //     coded_output = new google::protobuf::io::CodedOutputStream(aos);
-    // }
-    sh_data->body->size = siz;
-    sh_data->msg.SerializeToCodedStream(coded_output);
+
+    coded_output->WriteVarint32(1);
+    coded_output->WriteVarint32(siz);
+
+    umsg->SerializeToCodedStream(coded_output);
     return;
 }
 void IPCWriter::updateClients()

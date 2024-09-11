@@ -87,22 +87,21 @@ int IPCReader::Free()
 }
 shData_t *IPCReader::ReadBody()
 {
+    char buf[10];
+    google::protobuf::uint32 hdr[2];
+
     wait_for_update();
     start_cnt_sem();
-    // google::protobuf::uint32 hdr[2];
-    memcpy(sh_data->body, data_addr + sizeof(SharedData::Header), 2 * sizeof(int));
-    if (sh_data->body->size > pkt_size) 
-    {
-        // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
-        delete[] pkt;
-        pkt = new char[sh_data->body->size];
-        pkt_size = sh_data->body->size;
-    }
     
+    memcpy(buf, data_addr + sizeof(SharedData::Header), sizeof(buf));
+    google::protobuf::io::ArrayInputStream ais(buf, sizeof(buf));
+    CodedInputStream coded_input(&ais);
+    coded_input.ReadVarint32(&hdr[0]);
+    coded_input.ReadVarint32(&hdr[1]);
     // Print the size stored in sh_data->body
     
-    memcpy(pkt, data_addr + sizeof(SharedData::Header) + 2 * sizeof(int), sh_data->body->size);
-    deserialize();
+    memcpy(pkt, data_addr + sizeof(SharedData::Header) + coded_input.CurrentPosition() , hdr[1]);
+    deserialize(hdr);
     // memcpy(sh_data->body->msg, data_addr + sizeof(SharedData::Header)+ sizeof(int), sh_data->body->size);
     // std::cout << "data_addr + sizeof(SharedData::Header) : " << data_addr + sizeof(SharedData::Header) << std::endl;
     
@@ -110,15 +109,13 @@ shData_t *IPCReader::ReadBody()
     
     return sh_data;
 }
-void IPCReader::deserialize()
+void IPCReader::deserialize(google::protobuf::uint32 *hdr)
 {
-    umsg::sample *sample_msg = new umsg::sample;
-    google::protobuf::io::ArrayInputStream ais(pkt, sh_data->body->size);
+    google::protobuf::io::ArrayInputStream ais(pkt, hdr[1]);
     CodedInputStream coded_input(&ais);
-    google::protobuf::io::CodedInputStream::Limit msgLimit = coded_input.PushLimit(sh_data->body->size);
-    sample_msg->ParseFromCodedStream(&coded_input);
+    google::protobuf::io::CodedInputStream::Limit msgLimit = coded_input.PushLimit(hdr[1]);
+    sh_data->body->ParseFromCodedStream(&coded_input);
     coded_input.PopLimit(msgLimit);
-    sh_data->msg = *sample_msg;
     return;
 }
 

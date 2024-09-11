@@ -28,27 +28,21 @@ typedef struct SharedData
         int clients;
         int reader_cnt;
     }header_t;
-    typedef struct Body
-    {
-        int type;
-        int size;
-    } body_t;
+
     header_t *header;
-    body_t *body;
-    umsg::sample msg;
+    umsg::sample *body;
+    
     SharedData()
     {
-        void *block = malloc(sizeof(header_t) + 2 * sizeof(int) + MAX_IPC_BUF);
-        if (block == nullptr) 
+        header = (header_t *)malloc(sizeof(header_t));
+        if (header == nullptr) 
         {
             std::cerr << "Failed to allocate memory for SharedData!" << std::endl;
             exit(EXIT_FAILURE);
         }
-        memset(block, 0, sizeof(header_t) + 2 * sizeof(int) + MAX_IPC_BUF);
-        header = (header_t *)block;
-        body = (body_t *)((char*)block + sizeof(header_t));
-        // static umsg::sample *tmp = new umsg::sample();
-        // body->msg = tmp;
+        memset(header, 0, sizeof(header_t));
+        body = new umsg::sample();
+        // TODO
         // std::memcpy(body->msg, tmp, sizeof(umsg::sample));
     }
     
