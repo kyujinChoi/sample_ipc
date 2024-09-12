@@ -10,3 +10,13 @@ message sample
     uint32 _reader_cnt=2;
     string _msg=3;
 }
+
+message Point {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message PointCloud {
+    repeated Point points = 1;
+}

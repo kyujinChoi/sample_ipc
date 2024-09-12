@@ -84,7 +84,7 @@ int IPCWriter::writeHeader()
 
     return 0;
 }
-int IPCWriter::writeBody(umsg::sample *umsg)
+int IPCWriter::writeBody(umsg::PointCloud *umsg)
 {
     *sh_data->body = *umsg;
     serialize(umsg);
@@ -95,26 +95,37 @@ int IPCWriter::writeBody(umsg::sample *umsg)
     end_write_sem();
     return 0;
 } 
-void IPCWriter::serialize(umsg::sample *umsg)
+int IPCWriter::writeBody()
 {
+    serialize(sh_data->body);
+    updateClients();
+
+    start_write_sem();
+    memcpy(data_addr + sizeof(SharedData::Header), pkt, pkt_size);
+    end_write_sem();
+    return 0;
+} 
+void IPCWriter::serialize(umsg::PointCloud *umsg)
+{
+    unsigned int type = 1;
     unsigned int siz = umsg->ByteSizeLong();
     
-    if (siz + 2 > pkt_size) 
+    int hdr_size = google::protobuf::io::CodedOutputStream::VarintSize32(type) + google::protobuf::io::CodedOutputStream::VarintSize32(siz);
+    if (siz + hdr_size > pkt_size) 
     {
-        // 만약 메시지가 최대 크기를 초과하면 새로운 크기만큼 다시 할당
-        delete[] pkt;
-        pkt_size = siz + 2;
-        pkt = new char[pkt_size];
+        delete[] pkt;  // 기존 버퍼 삭제
+        pkt_size = siz + hdr_size;  // 새로운 크기로 설정
+        pkt = new char[pkt_size];  // 새로운 버퍼 할당
     }
     // memcpy(sh_data->body, umsg, siz);
     
     google::protobuf::io::ArrayOutputStream aos(pkt, pkt_size);
-    CodedOutputStream *coded_output = new CodedOutputStream(&aos);
+    CodedOutputStream coded_output(&aos);
 
-    coded_output->WriteVarint32(1);
-    coded_output->WriteVarint32(siz);
+    coded_output.WriteVarint32(type);
+    coded_output.WriteVarint32(siz);
 
-    umsg->SerializeToCodedStream(coded_output);
+    umsg->SerializeToCodedStream(&coded_output);
     return;
 }
 void IPCWriter::updateClients()

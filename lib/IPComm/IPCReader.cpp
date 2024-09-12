@@ -87,7 +87,7 @@ int IPCReader::Free()
 }
 shData_t *IPCReader::ReadBody()
 {
-    char buf[10];
+    char buf[20];
     google::protobuf::uint32 hdr[2];
 
     wait_for_update();
@@ -98,6 +98,9 @@ shData_t *IPCReader::ReadBody()
     CodedInputStream coded_input(&ais);
     coded_input.ReadVarint32(&hdr[0]);
     coded_input.ReadVarint32(&hdr[1]);
+    std::cout << "coded_input.CurrentPosition() " << coded_input.CurrentPosition()<< std::endl;
+    std::cout << "hdr[0]: " << hdr[0] << std::endl;
+    std::cout << "hdr[1]: " << hdr[1] << std::endl;
     // Print the size stored in sh_data->body
     
     memcpy(pkt, data_addr + sizeof(SharedData::Header) + coded_input.CurrentPosition() , hdr[1]);

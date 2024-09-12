@@ -7,7 +7,7 @@ include_directories(${INCL})
 set(EXCLUDE_PATHS
     "CMakeFiles"
 )
-file(GLOB_RECURSE CPP_FILES "*.cpp")
+file(GLOB_RECURSE CPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 
 foreach(TMP_PATH ${CPP_FILES})

@@ -30,7 +30,7 @@ typedef struct SharedData
     }header_t;
 
     header_t *header;
-    umsg::sample *body;
+    umsg::PointCloud *body;
     
     SharedData()
     {
@@ -41,7 +41,7 @@ typedef struct SharedData
             exit(EXIT_FAILURE);
         }
         memset(header, 0, sizeof(header_t));
-        body = new umsg::sample();
+        body = new umsg::PointCloud();
         // TODO
         // std::memcpy(body->msg, tmp, sizeof(umsg::sample));
     }

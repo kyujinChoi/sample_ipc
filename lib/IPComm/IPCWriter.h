@@ -12,15 +12,15 @@ public:
     shData_t *getSharedData();
     int readHeader();
     int writeHeader();
-    int writeBody(umsg::sample *umsg);
-    // int writeBody();
+    int writeBody(umsg::PointCloud *umsg);
+    int writeBody();
     void updateClients();
     int Free();
     void init_sem(void *pthis);
     void start_write_sem();
     void end_write_sem();
     void free_sem(void *pthis);
-    void serialize(umsg::sample *umsg);
+    void serialize(umsg::PointCloud *umsg);
 
 public:
     sem_t *ticket_mtx, *write_mtx, *cnt_mtx;
