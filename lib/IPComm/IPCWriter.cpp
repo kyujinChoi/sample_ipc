@@ -124,7 +124,8 @@ void IPCWriter::serialize(umsg::PointCloud *umsg)
 
     coded_output.WriteVarint32(type);
     coded_output.WriteVarint32(siz);
-
+    // std::cout << "hdr[0]: " << type << std::endl;
+    // std::cout << "hdr[1]: " << siz << std::endl;
     umsg->SerializeToCodedStream(&coded_output);
     return;
 }

@@ -98,11 +98,15 @@ shData_t *IPCReader::ReadBody()
     CodedInputStream coded_input(&ais);
     coded_input.ReadVarint32(&hdr[0]);
     coded_input.ReadVarint32(&hdr[1]);
-    std::cout << "coded_input.CurrentPosition() " << coded_input.CurrentPosition()<< std::endl;
-    std::cout << "hdr[0]: " << hdr[0] << std::endl;
-    std::cout << "hdr[1]: " << hdr[1] << std::endl;
+    // std::cout << "hdr[0]: " << hdr[0] << std::endl;
+    // std::cout << "hdr[1]: " << hdr[1] << std::endl;
     // Print the size stored in sh_data->body
-    
+    if (hdr[1] > pkt_size) 
+    {
+        delete[] pkt;  // 기존 버퍼 삭제
+        pkt_size = hdr[1];  // 새로운 크기로 설정
+        pkt = new char[pkt_size];  // 새로운 버퍼 할당
+    }
     memcpy(pkt, data_addr + sizeof(SharedData::Header) + coded_input.CurrentPosition() , hdr[1]);
     deserialize(hdr);
     // memcpy(sh_data->body->msg, data_addr + sizeof(SharedData::Header)+ sizeof(int), sh_data->body->size);

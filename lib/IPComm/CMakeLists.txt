@@ -38,13 +38,26 @@ add_library(${PROJECT_NAME} SHARED ${CPP_FILES} ${PROTO_SRCS})
 # endif()
 # ament_target_dependencies(${PROJECT_NAME} ${AMENT_LIB})
 target_link_libraries(${PROJECT_NAME} ${LIBS} ${PROTOBUF_LIBRARIES})
+
+function(check_file_exists file result)
+  if(EXISTS ${file})
+    set(${result} TRUE PARENT_SCOPE)
+  else()
+    set(${result} FALSE PARENT_SCOPE)
+  endif()
+endfunction()
+
+
+
 foreach(PROTO_HDR ${PROTO_HDRS})
     
     get_filename_component(PROTO_HDR_NAME ${PROTO_HDR} NAME)
     
     set(PROTO_HDR_NEW ${CMAKE_CURRENT_SOURCE_DIR}/${PROTO_HDR_NAME})
+    check_file_exists(${PROTO_HDR_NEW} PROTO_HDR_EXISTS)
     message(STATUS "FROM ${PROTO_HDR}")
     message(STATUS "TO ${PROTO_HDR_NEW}")
+    if(NOT PROTO_HDR_EXISTS)
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_HDR} ${PROTO_HDR_NEW}
@@ -52,6 +65,7 @@ foreach(PROTO_HDR ${PROTO_HDRS})
         COMMENT "Copying ${PROTO_HDR} to ${PROTO_HDR_NEW}"
     )
     list(APPEND PROTO_HDRS_NEW ${PROTO_HDR_NEW})
+    endif()
 endforeach()
 # if(LogManager)
 
