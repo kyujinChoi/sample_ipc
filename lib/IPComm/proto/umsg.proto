@@ -11,12 +11,20 @@ message sample
     string _msg=3;
 }
 
-message Point {
+message PointXYZIRL {
     float x = 1;
     float y = 2;
     float z = 3;
+    float intensity = 4;
+    uint32 ring = 5;
+    uint32 label = 6;
 }
 
 message PointCloud {
-    repeated Point points = 1;
+    repeated PointXYZIRL points = 1;
+}
+message LogEvent
+{
+    bool log_event = 1;
+    string obsol = 2;
 }

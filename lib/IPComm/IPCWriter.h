@@ -12,7 +12,7 @@ public:
     shData_t *getSharedData();
     int readHeader();
     int writeHeader();
-    int writeBody(umsg::PointCloud *umsg);
+    // int writeBody(umsg::PointCloud *umsg);
     int writeBody();
     void updateClients();
     int Free();

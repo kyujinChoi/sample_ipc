@@ -23,6 +23,12 @@ using namespace google::protobuf::io;
 #pragma pack(push, 1)
 typedef struct SharedData
 {
+    enum MessageType
+    {
+        POINTCLOUD,
+        LOG_EVENT
+    };
+
     typedef struct Header
     {
         int clients;
@@ -30,9 +36,10 @@ typedef struct SharedData
     }header_t;
 
     header_t *header;
-    umsg::PointCloud *body;
+    void *body;
+    // umsg::PointCloud *body;
     
-    SharedData()
+    SharedData(int type)
     {
         header = (header_t *)malloc(sizeof(header_t));
         if (header == nullptr) 
@@ -41,7 +48,10 @@ typedef struct SharedData
             exit(EXIT_FAILURE);
         }
         memset(header, 0, sizeof(header_t));
-        body = new umsg::PointCloud();
+        if(type == POINTCLOUD)
+            body = new umsg::PointCloud();
+        else if(type == LOG_EVENT)
+            body = new umsg::LogEvent();
         // TODO
         // std::memcpy(body->msg, tmp, sizeof(umsg::sample));
     }

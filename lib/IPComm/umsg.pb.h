@@ -47,7 +47,7 @@ struct TableStruct_umsg_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[3]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -55,19 +55,23 @@ struct TableStruct_umsg_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_umsg_2eproto;
 namespace umsg {
-class Point;
-class PointDefaultTypeInternal;
-extern PointDefaultTypeInternal _Point_default_instance_;
+class LogEvent;
+class LogEventDefaultTypeInternal;
+extern LogEventDefaultTypeInternal _LogEvent_default_instance_;
 class PointCloud;
 class PointCloudDefaultTypeInternal;
 extern PointCloudDefaultTypeInternal _PointCloud_default_instance_;
+class PointXYZIRL;
+class PointXYZIRLDefaultTypeInternal;
+extern PointXYZIRLDefaultTypeInternal _PointXYZIRL_default_instance_;
 class sample;
 class sampleDefaultTypeInternal;
 extern sampleDefaultTypeInternal _sample_default_instance_;
 }  // namespace umsg
 PROTOBUF_NAMESPACE_OPEN
-template<> ::umsg::Point* Arena::CreateMaybeMessage<::umsg::Point>(Arena*);
+template<> ::umsg::LogEvent* Arena::CreateMaybeMessage<::umsg::LogEvent>(Arena*);
 template<> ::umsg::PointCloud* Arena::CreateMaybeMessage<::umsg::PointCloud>(Arena*);
+template<> ::umsg::PointXYZIRL* Arena::CreateMaybeMessage<::umsg::PointXYZIRL>(Arena*);
 template<> ::umsg::sample* Arena::CreateMaybeMessage<::umsg::sample>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace umsg {
@@ -249,23 +253,23 @@ class sample PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
-class Point PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.Point) */ {
+class PointXYZIRL PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.PointXYZIRL) */ {
  public:
-  inline Point() : Point(nullptr) {};
-  virtual ~Point();
+  inline PointXYZIRL() : PointXYZIRL(nullptr) {};
+  virtual ~PointXYZIRL();
 
-  Point(const Point& from);
-  Point(Point&& from) noexcept
-    : Point() {
+  PointXYZIRL(const PointXYZIRL& from);
+  PointXYZIRL(PointXYZIRL&& from) noexcept
+    : PointXYZIRL() {
     *this = ::std::move(from);
   }
 
-  inline Point& operator=(const Point& from) {
+  inline PointXYZIRL& operator=(const PointXYZIRL& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Point& operator=(Point&& from) noexcept {
+  inline PointXYZIRL& operator=(PointXYZIRL&& from) noexcept {
     if (GetArena() == from.GetArena()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -283,20 +287,20 @@ class Point PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Point& default_instance();
+  static const PointXYZIRL& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Point* internal_default_instance() {
-    return reinterpret_cast<const Point*>(
-               &_Point_default_instance_);
+  static inline const PointXYZIRL* internal_default_instance() {
+    return reinterpret_cast<const PointXYZIRL*>(
+               &_PointXYZIRL_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     1;
 
-  friend void swap(Point& a, Point& b) {
+  friend void swap(PointXYZIRL& a, PointXYZIRL& b) {
     a.Swap(&b);
   }
-  inline void Swap(Point* other) {
+  inline void Swap(PointXYZIRL* other) {
     if (other == this) return;
     if (GetArena() == other->GetArena()) {
       InternalSwap(other);
@@ -304,7 +308,7 @@ class Point PROTOBUF_FINAL :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(Point* other) {
+  void UnsafeArenaSwap(PointXYZIRL* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -312,17 +316,17 @@ class Point PROTOBUF_FINAL :
 
   // implements Message ----------------------------------------------
 
-  inline Point* New() const final {
-    return CreateMaybeMessage<Point>(nullptr);
+  inline PointXYZIRL* New() const final {
+    return CreateMaybeMessage<PointXYZIRL>(nullptr);
   }
 
-  Point* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Point>(arena);
+  PointXYZIRL* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<PointXYZIRL>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Point& from);
-  void MergeFrom(const Point& from);
+  void CopyFrom(const PointXYZIRL& from);
+  void MergeFrom(const PointXYZIRL& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -336,13 +340,13 @@ class Point PROTOBUF_FINAL :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Point* other);
+  void InternalSwap(PointXYZIRL* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "umsg.Point";
+    return "umsg.PointXYZIRL";
   }
   protected:
-  explicit Point(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  explicit PointXYZIRL(::PROTOBUF_NAMESPACE_ID::Arena* arena);
   private:
   static void ArenaDtor(void* object);
   inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -365,6 +369,9 @@ class Point PROTOBUF_FINAL :
     kXFieldNumber = 1,
     kYFieldNumber = 2,
     kZFieldNumber = 3,
+    kIntensityFieldNumber = 4,
+    kRingFieldNumber = 5,
+    kLabelFieldNumber = 6,
   };
   // float x = 1;
   void clear_x();
@@ -393,7 +400,34 @@ class Point PROTOBUF_FINAL :
   void _internal_set_z(float value);
   public:
 
-  // @@protoc_insertion_point(class_scope:umsg.Point)
+  // float intensity = 4;
+  void clear_intensity();
+  float intensity() const;
+  void set_intensity(float value);
+  private:
+  float _internal_intensity() const;
+  void _internal_set_intensity(float value);
+  public:
+
+  // uint32 ring = 5;
+  void clear_ring();
+  ::PROTOBUF_NAMESPACE_ID::uint32 ring() const;
+  void set_ring(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_ring() const;
+  void _internal_set_ring(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
+  // uint32 label = 6;
+  void clear_label();
+  ::PROTOBUF_NAMESPACE_ID::uint32 label() const;
+  void set_label(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_label() const;
+  void _internal_set_label(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:umsg.PointXYZIRL)
  private:
   class _Internal;
 
@@ -403,6 +437,9 @@ class Point PROTOBUF_FINAL :
   float x_;
   float y_;
   float z_;
+  float intensity_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 ring_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 label_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_umsg_2eproto;
 };
@@ -523,22 +560,22 @@ class PointCloud PROTOBUF_FINAL :
   enum : int {
     kPointsFieldNumber = 1,
   };
-  // repeated .umsg.Point points = 1;
+  // repeated .umsg.PointXYZIRL points = 1;
   int points_size() const;
   private:
   int _internal_points_size() const;
   public:
   void clear_points();
-  ::umsg::Point* mutable_points(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Point >*
+  ::umsg::PointXYZIRL* mutable_points(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::PointXYZIRL >*
       mutable_points();
   private:
-  const ::umsg::Point& _internal_points(int index) const;
-  ::umsg::Point* _internal_add_points();
+  const ::umsg::PointXYZIRL& _internal_points(int index) const;
+  ::umsg::PointXYZIRL* _internal_add_points();
   public:
-  const ::umsg::Point& points(int index) const;
-  ::umsg::Point* add_points();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Point >&
+  const ::umsg::PointXYZIRL& points(int index) const;
+  ::umsg::PointXYZIRL* add_points();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::PointXYZIRL >&
       points() const;
 
   // @@protoc_insertion_point(class_scope:umsg.PointCloud)
@@ -548,7 +585,171 @@ class PointCloud PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Point > points_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::PointXYZIRL > points_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_umsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class LogEvent PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.LogEvent) */ {
+ public:
+  inline LogEvent() : LogEvent(nullptr) {};
+  virtual ~LogEvent();
+
+  LogEvent(const LogEvent& from);
+  LogEvent(LogEvent&& from) noexcept
+    : LogEvent() {
+    *this = ::std::move(from);
+  }
+
+  inline LogEvent& operator=(const LogEvent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline LogEvent& operator=(LogEvent&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const LogEvent& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const LogEvent* internal_default_instance() {
+    return reinterpret_cast<const LogEvent*>(
+               &_LogEvent_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(LogEvent& a, LogEvent& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(LogEvent* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(LogEvent* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline LogEvent* New() const final {
+    return CreateMaybeMessage<LogEvent>(nullptr);
+  }
+
+  LogEvent* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<LogEvent>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const LogEvent& from);
+  void MergeFrom(const LogEvent& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(LogEvent* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "umsg.LogEvent";
+  }
+  protected:
+  explicit LogEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_umsg_2eproto);
+    return ::descriptor_table_umsg_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kObsolFieldNumber = 2,
+    kLogEventFieldNumber = 1,
+  };
+  // string obsol = 2;
+  void clear_obsol();
+  const std::string& obsol() const;
+  void set_obsol(const std::string& value);
+  void set_obsol(std::string&& value);
+  void set_obsol(const char* value);
+  void set_obsol(const char* value, size_t size);
+  std::string* mutable_obsol();
+  std::string* release_obsol();
+  void set_allocated_obsol(std::string* obsol);
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  std::string* unsafe_arena_release_obsol();
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  void unsafe_arena_set_allocated_obsol(
+      std::string* obsol);
+  private:
+  const std::string& _internal_obsol() const;
+  void _internal_set_obsol(const std::string& value);
+  std::string* _internal_mutable_obsol();
+  public:
+
+  // bool log_event = 1;
+  void clear_log_event();
+  bool log_event() const;
+  void set_log_event(bool value);
+  private:
+  bool _internal_log_event() const;
+  void _internal_set_log_event(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:umsg.LogEvent)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr obsol_;
+  bool log_event_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_umsg_2eproto;
 };
@@ -686,73 +887,133 @@ inline void sample::unsafe_arena_set_allocated__msg(
 
 // -------------------------------------------------------------------
 
-// Point
+// PointXYZIRL
 
 // float x = 1;
-inline void Point::clear_x() {
+inline void PointXYZIRL::clear_x() {
   x_ = 0;
 }
-inline float Point::_internal_x() const {
+inline float PointXYZIRL::_internal_x() const {
   return x_;
 }
-inline float Point::x() const {
-  // @@protoc_insertion_point(field_get:umsg.Point.x)
+inline float PointXYZIRL::x() const {
+  // @@protoc_insertion_point(field_get:umsg.PointXYZIRL.x)
   return _internal_x();
 }
-inline void Point::_internal_set_x(float value) {
+inline void PointXYZIRL::_internal_set_x(float value) {
   
   x_ = value;
 }
-inline void Point::set_x(float value) {
+inline void PointXYZIRL::set_x(float value) {
   _internal_set_x(value);
-  // @@protoc_insertion_point(field_set:umsg.Point.x)
+  // @@protoc_insertion_point(field_set:umsg.PointXYZIRL.x)
 }
 
 // float y = 2;
-inline void Point::clear_y() {
+inline void PointXYZIRL::clear_y() {
   y_ = 0;
 }
-inline float Point::_internal_y() const {
+inline float PointXYZIRL::_internal_y() const {
   return y_;
 }
-inline float Point::y() const {
-  // @@protoc_insertion_point(field_get:umsg.Point.y)
+inline float PointXYZIRL::y() const {
+  // @@protoc_insertion_point(field_get:umsg.PointXYZIRL.y)
   return _internal_y();
 }
-inline void Point::_internal_set_y(float value) {
+inline void PointXYZIRL::_internal_set_y(float value) {
   
   y_ = value;
 }
-inline void Point::set_y(float value) {
+inline void PointXYZIRL::set_y(float value) {
   _internal_set_y(value);
-  // @@protoc_insertion_point(field_set:umsg.Point.y)
+  // @@protoc_insertion_point(field_set:umsg.PointXYZIRL.y)
 }
 
 // float z = 3;
-inline void Point::clear_z() {
+inline void PointXYZIRL::clear_z() {
   z_ = 0;
 }
-inline float Point::_internal_z() const {
+inline float PointXYZIRL::_internal_z() const {
   return z_;
 }
-inline float Point::z() const {
-  // @@protoc_insertion_point(field_get:umsg.Point.z)
+inline float PointXYZIRL::z() const {
+  // @@protoc_insertion_point(field_get:umsg.PointXYZIRL.z)
   return _internal_z();
 }
-inline void Point::_internal_set_z(float value) {
+inline void PointXYZIRL::_internal_set_z(float value) {
   
   z_ = value;
 }
-inline void Point::set_z(float value) {
+inline void PointXYZIRL::set_z(float value) {
   _internal_set_z(value);
-  // @@protoc_insertion_point(field_set:umsg.Point.z)
+  // @@protoc_insertion_point(field_set:umsg.PointXYZIRL.z)
+}
+
+// float intensity = 4;
+inline void PointXYZIRL::clear_intensity() {
+  intensity_ = 0;
+}
+inline float PointXYZIRL::_internal_intensity() const {
+  return intensity_;
+}
+inline float PointXYZIRL::intensity() const {
+  // @@protoc_insertion_point(field_get:umsg.PointXYZIRL.intensity)
+  return _internal_intensity();
+}
+inline void PointXYZIRL::_internal_set_intensity(float value) {
+  
+  intensity_ = value;
+}
+inline void PointXYZIRL::set_intensity(float value) {
+  _internal_set_intensity(value);
+  // @@protoc_insertion_point(field_set:umsg.PointXYZIRL.intensity)
+}
+
+// uint32 ring = 5;
+inline void PointXYZIRL::clear_ring() {
+  ring_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 PointXYZIRL::_internal_ring() const {
+  return ring_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 PointXYZIRL::ring() const {
+  // @@protoc_insertion_point(field_get:umsg.PointXYZIRL.ring)
+  return _internal_ring();
+}
+inline void PointXYZIRL::_internal_set_ring(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  ring_ = value;
+}
+inline void PointXYZIRL::set_ring(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_ring(value);
+  // @@protoc_insertion_point(field_set:umsg.PointXYZIRL.ring)
+}
+
+// uint32 label = 6;
+inline void PointXYZIRL::clear_label() {
+  label_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 PointXYZIRL::_internal_label() const {
+  return label_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 PointXYZIRL::label() const {
+  // @@protoc_insertion_point(field_get:umsg.PointXYZIRL.label)
+  return _internal_label();
+}
+inline void PointXYZIRL::_internal_set_label(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  label_ = value;
+}
+inline void PointXYZIRL::set_label(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_label(value);
+  // @@protoc_insertion_point(field_set:umsg.PointXYZIRL.label)
 }
 
 // -------------------------------------------------------------------
 
 // PointCloud
 
-// repeated .umsg.Point points = 1;
+// repeated .umsg.PointXYZIRL points = 1;
 inline int PointCloud::_internal_points_size() const {
   return points_.size();
 }
@@ -762,38 +1023,145 @@ inline int PointCloud::points_size() const {
 inline void PointCloud::clear_points() {
   points_.Clear();
 }
-inline ::umsg::Point* PointCloud::mutable_points(int index) {
+inline ::umsg::PointXYZIRL* PointCloud::mutable_points(int index) {
   // @@protoc_insertion_point(field_mutable:umsg.PointCloud.points)
   return points_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Point >*
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::PointXYZIRL >*
 PointCloud::mutable_points() {
   // @@protoc_insertion_point(field_mutable_list:umsg.PointCloud.points)
   return &points_;
 }
-inline const ::umsg::Point& PointCloud::_internal_points(int index) const {
+inline const ::umsg::PointXYZIRL& PointCloud::_internal_points(int index) const {
   return points_.Get(index);
 }
-inline const ::umsg::Point& PointCloud::points(int index) const {
+inline const ::umsg::PointXYZIRL& PointCloud::points(int index) const {
   // @@protoc_insertion_point(field_get:umsg.PointCloud.points)
   return _internal_points(index);
 }
-inline ::umsg::Point* PointCloud::_internal_add_points() {
+inline ::umsg::PointXYZIRL* PointCloud::_internal_add_points() {
   return points_.Add();
 }
-inline ::umsg::Point* PointCloud::add_points() {
+inline ::umsg::PointXYZIRL* PointCloud::add_points() {
   // @@protoc_insertion_point(field_add:umsg.PointCloud.points)
   return _internal_add_points();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Point >&
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::PointXYZIRL >&
 PointCloud::points() const {
   // @@protoc_insertion_point(field_list:umsg.PointCloud.points)
   return points_;
 }
 
+// -------------------------------------------------------------------
+
+// LogEvent
+
+// bool log_event = 1;
+inline void LogEvent::clear_log_event() {
+  log_event_ = false;
+}
+inline bool LogEvent::_internal_log_event() const {
+  return log_event_;
+}
+inline bool LogEvent::log_event() const {
+  // @@protoc_insertion_point(field_get:umsg.LogEvent.log_event)
+  return _internal_log_event();
+}
+inline void LogEvent::_internal_set_log_event(bool value) {
+  
+  log_event_ = value;
+}
+inline void LogEvent::set_log_event(bool value) {
+  _internal_set_log_event(value);
+  // @@protoc_insertion_point(field_set:umsg.LogEvent.log_event)
+}
+
+// string obsol = 2;
+inline void LogEvent::clear_obsol() {
+  obsol_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& LogEvent::obsol() const {
+  // @@protoc_insertion_point(field_get:umsg.LogEvent.obsol)
+  return _internal_obsol();
+}
+inline void LogEvent::set_obsol(const std::string& value) {
+  _internal_set_obsol(value);
+  // @@protoc_insertion_point(field_set:umsg.LogEvent.obsol)
+}
+inline std::string* LogEvent::mutable_obsol() {
+  // @@protoc_insertion_point(field_mutable:umsg.LogEvent.obsol)
+  return _internal_mutable_obsol();
+}
+inline const std::string& LogEvent::_internal_obsol() const {
+  return obsol_.Get();
+}
+inline void LogEvent::_internal_set_obsol(const std::string& value) {
+  
+  obsol_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void LogEvent::set_obsol(std::string&& value) {
+  
+  obsol_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:umsg.LogEvent.obsol)
+}
+inline void LogEvent::set_obsol(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  obsol_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:umsg.LogEvent.obsol)
+}
+inline void LogEvent::set_obsol(const char* value,
+    size_t size) {
+  
+  obsol_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:umsg.LogEvent.obsol)
+}
+inline std::string* LogEvent::_internal_mutable_obsol() {
+  
+  return obsol_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* LogEvent::release_obsol() {
+  // @@protoc_insertion_point(field_release:umsg.LogEvent.obsol)
+  return obsol_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void LogEvent::set_allocated_obsol(std::string* obsol) {
+  if (obsol != nullptr) {
+    
+  } else {
+    
+  }
+  obsol_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), obsol,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:umsg.LogEvent.obsol)
+}
+inline std::string* LogEvent::unsafe_arena_release_obsol() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.LogEvent.obsol)
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  
+  return obsol_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      GetArena());
+}
+inline void LogEvent::unsafe_arena_set_allocated_obsol(
+    std::string* obsol) {
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  if (obsol != nullptr) {
+    
+  } else {
+    
+  }
+  obsol_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      obsol, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.LogEvent.obsol)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

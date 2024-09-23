@@ -8,7 +8,7 @@ IPCWriter::IPCWriter(int key)
     param.insertParam("sem_update_mtx", "/ipc_update_mtx");
     param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
 
-    sh_data = new shData_t();
+    sh_data = new shData_t(SharedData::POINTCLOUD);
     pkt_size = 2*sizeof(int);
     pkt = new char[pkt_size];
     // aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
@@ -84,20 +84,20 @@ int IPCWriter::writeHeader()
 
     return 0;
 }
-int IPCWriter::writeBody(umsg::PointCloud *umsg)
-{
-    *sh_data->body = *umsg;
-    serialize(umsg);
-    updateClients();
+// int IPCWriter::writeBody(umsg::PointCloud *umsg)
+// {
+//     *sh_data->body = *umsg;
+//     serialize(umsg);
+//     updateClients();
 
-    start_write_sem();
-    memcpy(data_addr + sizeof(SharedData::Header), pkt, pkt_size);
-    end_write_sem();
-    return 0;
-} 
+//     start_write_sem();
+//     memcpy(data_addr + sizeof(SharedData::Header), pkt, pkt_size);
+//     end_write_sem();
+//     return 0;
+// } 
 int IPCWriter::writeBody()
 {
-    serialize(sh_data->body);
+    serialize((umsg::PointCloud *)sh_data->body);
     updateClients();
 
     start_write_sem();
@@ -124,8 +124,7 @@ void IPCWriter::serialize(umsg::PointCloud *umsg)
 
     coded_output.WriteVarint32(type);
     coded_output.WriteVarint32(siz);
-    // std::cout << "hdr[0]: " << type << std::endl;
-    // std::cout << "hdr[1]: " << siz << std::endl;
+
     umsg->SerializeToCodedStream(&coded_output);
     return;
 }

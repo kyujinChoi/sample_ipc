@@ -57,7 +57,8 @@ foreach(PROTO_HDR ${PROTO_HDRS})
     check_file_exists(${PROTO_HDR_NEW} PROTO_HDR_EXISTS)
     message(STATUS "FROM ${PROTO_HDR}")
     message(STATUS "TO ${PROTO_HDR_NEW}")
-    if(NOT PROTO_HDR_EXISTS)
+    message(STATUS "PROTO_HDR_EXISTS ${PROTO_HDR_EXISTS}")
+    if("${PROTO_HDR_EXISTS}" STREQUAL "FALSE")
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_HDR} ${PROTO_HDR_NEW}

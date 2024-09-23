@@ -7,7 +7,7 @@ IPCReader::IPCReader(int key)
     param.insertParam("sem_update_mtx", "/ipc_update_mtx");
     param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
 
-    sh_data = new shData_t();
+    sh_data = new shData_t(SharedData::POINTCLOUD);
     pkt_size = 2 * sizeof(int);
     pkt = new char[pkt_size];
     // ais = new google::protobuf::io::ArrayInputStream(pkt, 2 * sizeof(int));
@@ -121,7 +121,7 @@ void IPCReader::deserialize(google::protobuf::uint32 *hdr)
     google::protobuf::io::ArrayInputStream ais(pkt, hdr[1]);
     CodedInputStream coded_input(&ais);
     google::protobuf::io::CodedInputStream::Limit msgLimit = coded_input.PushLimit(hdr[1]);
-    sh_data->body->ParseFromCodedStream(&coded_input);
+    ((umsg::PointCloud *)sh_data->body)->ParseFromCodedStream(&coded_input);
     coded_input.PopLimit(msgLimit);
     return;
 }
