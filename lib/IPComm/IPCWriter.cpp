@@ -8,8 +8,8 @@ IPCWriter::IPCWriter(int key)
     param.insertParam("sem_update_mtx", "/ipc_update_mtx");
     param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
 
-    sh_data = new shData_t(SharedData::POINTCLOUD);
-    pkt_size = 2*sizeof(int);
+    sh_header = new shData_t();
+    pkt_size = 3*sizeof(int);
     pkt = new char[pkt_size];
     // aos = new google::protobuf::io::ArrayOutputStream(pkt, pkt_size);
     // coded_output = new google::protobuf::io::CodedOutputStream(aos);
@@ -18,10 +18,6 @@ IPCWriter::IPCWriter(int key)
     Init();
 }
 IPCWriter::~IPCWriter() { Free(); };
-shData_t *IPCWriter::getSharedData()
-{
-    return sh_data;
-}
 int IPCWriter::Init()
 {
     if ((shmid = shmget((key_t)param.getParamInt("key"), sizeof(SharedData::Header) + 2*sizeof(int) + MAX_IPC_BUF, IPC_CREAT | IPC_EXCL | 0666)) == -1)
@@ -71,7 +67,7 @@ int IPCWriter::Init()
 int IPCWriter::readHeader()
 {
     sem_wait(ticket_mtx);
-    memcpy((char *)sh_data->header, (char *)data_addr, sizeof(SharedData::Header));
+    memcpy((char *)sh_header->header, (char *)data_addr, sizeof(SharedData::Header));
     sem_post(ticket_mtx);
 
     return 0;
@@ -79,25 +75,22 @@ int IPCWriter::readHeader()
 int IPCWriter::writeHeader()
 {
     sem_wait(ticket_mtx);
-    memcpy((char *)data_addr, (char *)sh_data->header, sizeof(SharedData::Header));
+    memcpy((char *)data_addr, (char *)sh_header->header, sizeof(SharedData::Header));
     sem_post(ticket_mtx);
 
     return 0;
 }
-// int IPCWriter::writeBody(umsg::PointCloud *umsg)
-// {
-//     *sh_data->body = *umsg;
-//     serialize(umsg);
-//     updateClients();
-
-//     start_write_sem();
-//     memcpy(data_addr + sizeof(SharedData::Header), pkt, pkt_size);
-//     end_write_sem();
-//     return 0;
-// } 
-int IPCWriter::writeBody()
+int IPCWriter::writeBody(unsigned int type, shData_t *send_msg)
 {
-    serialize((umsg::PointCloud *)sh_data->body);
+    // if(sh_data->body == nullptr)
+    //     sh_data->initBody(type);
+
+    // if (type == SharedData::POINTCLOUD)
+    //     *(umsg::PointCloud *)sh_data->body = *((umsg::PointCloud *)send_msg->body);
+    // else if (type == SharedData::LOG_EVENT)
+    //     *(umsg::LogEvent *)sh_data->body = *((umsg::LogEvent *)send_msg->body);
+
+    serialize(type, send_msg);
     updateClients();
 
     start_write_sem();
@@ -105,16 +98,23 @@ int IPCWriter::writeBody()
     end_write_sem();
     return 0;
 } 
-void IPCWriter::serialize(umsg::PointCloud *umsg)
+
+void IPCWriter::serialize(unsigned int type, shData_t *send_msg)
 {
-    unsigned int type = 1;
-    unsigned int siz = umsg->ByteSizeLong();
+    unsigned int msg_siz;
+    if (type == SharedData::POINTCLOUD)
+        msg_siz = ((umsg::PointCloud *)send_msg->body)->ByteSizeLong();
+    else if (type == SharedData::LOG_EVENT)
+        msg_siz = ((umsg::LogEvent *)send_msg->body)->ByteSizeLong();
     
-    int hdr_size = google::protobuf::io::CodedOutputStream::VarintSize32(type) + google::protobuf::io::CodedOutputStream::VarintSize32(siz);
-    if (siz + hdr_size > pkt_size) 
+    int hdr_size = google::protobuf::io::CodedOutputStream::VarintSize32(type) 
+                    + google::protobuf::io::CodedOutputStream::VarintSize32(msg_siz)
+                    + google::protobuf::io::CodedOutputStream::VarintSize32(send_msg->cnt);
+
+    if (msg_siz + hdr_size > pkt_size) 
     {
         delete[] pkt;  // 기존 버퍼 삭제
-        pkt_size = siz + hdr_size;  // 새로운 크기로 설정
+        pkt_size = msg_siz + hdr_size;  // 새로운 크기로 설정
         pkt = new char[pkt_size];  // 새로운 버퍼 할당
     }
     // memcpy(sh_data->body, umsg, siz);
@@ -123,16 +123,20 @@ void IPCWriter::serialize(umsg::PointCloud *umsg)
     CodedOutputStream coded_output(&aos);
 
     coded_output.WriteVarint32(type);
-    coded_output.WriteVarint32(siz);
+    coded_output.WriteVarint32(msg_siz);
+    coded_output.WriteVarint32(send_msg->cnt++);
 
-    umsg->SerializeToCodedStream(&coded_output);
+    if (type == SharedData::POINTCLOUD)
+        ((umsg::PointCloud *)send_msg->body)->SerializeToCodedStream(&coded_output);
+    else if (type == SharedData::LOG_EVENT)
+        ((umsg::PointCloud *)send_msg->body)->SerializeToCodedStream(&coded_output);
     return;
 }
 void IPCWriter::updateClients()
 {
     static int prev_clients = 0;
     readHeader();
-    int cur_clients = sh_data->header->clients;
+    int cur_clients = sh_header->header->clients;
 
     std::vector<int> erase_idx;
     for (int i = 0; i < vec_client_idx.size(); i++)

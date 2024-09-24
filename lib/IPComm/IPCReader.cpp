@@ -7,8 +7,13 @@ IPCReader::IPCReader(int key)
     param.insertParam("sem_update_mtx", "/ipc_update_mtx");
     param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
 
-    sh_data = new shData_t(SharedData::POINTCLOUD);
-    pkt_size = 2 * sizeof(int);
+    for(int i = 0 ; i < SharedData::MAX_NUM; i++)
+    {
+        shData_t *sh_data = new shData_t(i);
+        vec_sh_data.push_back(sh_data);
+    }
+    sh_header = new shData_t();
+    pkt_size = 3 * sizeof(int);
     pkt = new char[pkt_size];
     // ais = new google::protobuf::io::ArrayInputStream(pkt, 2 * sizeof(int));
     // coded_input = new google::protobuf::io::CodedInputStream(ais);
@@ -38,7 +43,7 @@ int IPCReader::Init()
 int IPCReader::readHeader()
 {
     sem_wait(ticket_mtx);
-    memcpy((char *)sh_data->header, (char *)data_addr, sizeof(SharedData::Header));
+    memcpy((char *)sh_header->header, (char *)data_addr, sizeof(SharedData::Header));
     sem_post(ticket_mtx);
 
     return 0;
@@ -46,7 +51,7 @@ int IPCReader::readHeader()
 int IPCReader::writeHeader()
 {
     sem_wait(ticket_mtx);
-    memcpy((char *)data_addr, (void *)sh_data->header, sizeof(SharedData::Header));
+    memcpy((char *)data_addr, (void *)sh_header->header, sizeof(SharedData::Header));
     sem_post(ticket_mtx);
 
     return 0;
@@ -54,9 +59,9 @@ int IPCReader::writeHeader()
 void IPCReader::readerEnter()
 {
     readHeader();
-    ++sh_data->header->clients;
+    ++sh_header->header->clients;
     writeHeader();
-    param.insertParam("client_id", sh_data->header->clients - 1);
+    param.insertParam("client_id", sh_header->header->clients - 1);
     static sem_t *st_update_mtx = SEM_FAILED;
     while (st_update_mtx == SEM_FAILED)
     {
@@ -88,7 +93,7 @@ int IPCReader::Free()
 shData_t *IPCReader::ReadBody()
 {
     char buf[20];
-    google::protobuf::uint32 hdr[2];
+    google::protobuf::uint32 hdr[3];
 
     wait_for_update();
     start_cnt_sem();
@@ -98,8 +103,11 @@ shData_t *IPCReader::ReadBody()
     CodedInputStream coded_input(&ais);
     coded_input.ReadVarint32(&hdr[0]);
     coded_input.ReadVarint32(&hdr[1]);
+    coded_input.ReadVarint32(&hdr[2]);
     // std::cout << "hdr[0]: " << hdr[0] << std::endl;
     // std::cout << "hdr[1]: " << hdr[1] << std::endl;
+    // std::cout << "hdr[2]: " << hdr[2] << std::endl;
+    // std::cout << "coded_input.CurrentPosition(): " << coded_input.CurrentPosition() << std::endl;
     // Print the size stored in sh_data->body
     if (hdr[1] > pkt_size) 
     {
@@ -114,14 +122,19 @@ shData_t *IPCReader::ReadBody()
     
     end_cnt_sem();
     
-    return sh_data;
+    return vec_sh_data[hdr[0]];
 }
 void IPCReader::deserialize(google::protobuf::uint32 *hdr)
 {
     google::protobuf::io::ArrayInputStream ais(pkt, hdr[1]);
     CodedInputStream coded_input(&ais);
     google::protobuf::io::CodedInputStream::Limit msgLimit = coded_input.PushLimit(hdr[1]);
-    ((umsg::PointCloud *)sh_data->body)->ParseFromCodedStream(&coded_input);
+    if (hdr[0] == SharedData::POINTCLOUD)
+        ((umsg::PointCloud *)vec_sh_data[hdr[0]]->body)->ParseFromCodedStream(&coded_input);
+    else if (hdr[0] == SharedData::LOG_EVENT)
+        ((umsg::LogEvent *)vec_sh_data[hdr[0]]->body)->ParseFromCodedStream(&coded_input);
+    
+    vec_sh_data[hdr[0]]->cnt = hdr[2];
     coded_input.PopLimit(msgLimit);
     return;
 }
@@ -157,7 +170,7 @@ void IPCReader::start_cnt_sem()
     int cnt;
     sem_wait(cnt_mtx);
     readHeader();
-    cnt = ++sh_data->header->reader_cnt;
+    cnt = ++sh_header->header->reader_cnt;
     writeHeader();
     sem_post(cnt_mtx);
     if (cnt == 1)
@@ -170,7 +183,7 @@ void IPCReader::end_cnt_sem()
     int cnt;
     sem_wait(cnt_mtx);
     readHeader();
-    cnt = --sh_data->header->reader_cnt;
+    cnt = --sh_header->header->reader_cnt;
     writeHeader();
     sem_post(cnt_mtx);
     if (cnt == 0)

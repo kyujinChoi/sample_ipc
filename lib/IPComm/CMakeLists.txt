@@ -58,6 +58,7 @@ foreach(PROTO_HDR ${PROTO_HDRS})
     message(STATUS "FROM ${PROTO_HDR}")
     message(STATUS "TO ${PROTO_HDR_NEW}")
     message(STATUS "PROTO_HDR_EXISTS ${PROTO_HDR_EXISTS}")
+    
     if("${PROTO_HDR_EXISTS}" STREQUAL "FALSE")
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD

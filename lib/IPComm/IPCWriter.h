@@ -1,26 +1,23 @@
 #ifndef _IPC_WRITER_H_
 #define _IPC_WRITER_H_
-// #include "umsg.pb.h"
-
 #include "SharedData.h"
+
 class IPCWriter
 {
 public:
     IPCWriter(int key);
     ~IPCWriter();
     int Init();
-    shData_t *getSharedData();
     int readHeader();
     int writeHeader();
-    // int writeBody(umsg::PointCloud *umsg);
-    int writeBody();
+    int writeBody(unsigned int type, shData_t *send_msg);
     void updateClients();
     int Free();
     void init_sem(void *pthis);
     void start_write_sem();
     void end_write_sem();
     void free_sem(void *pthis);
-    void serialize(umsg::PointCloud *umsg);
+    void serialize(unsigned int type, shData_t *send_msg);
 
 public:
     sem_t *ticket_mtx, *write_mtx, *cnt_mtx;
@@ -32,10 +29,8 @@ private:
     char *data_addr;
     int shmid;
 
-    shData_t *sh_data;
+    shData_t *sh_header;
     char* pkt;
     size_t pkt_size;
-    // google::protobuf::io::ArrayOutputStream* aos;
-    // google::protobuf::io::CodedOutputStream* coded_output;
 };
 #endif

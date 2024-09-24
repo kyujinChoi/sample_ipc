@@ -27,7 +27,8 @@ public:
 private:
     char *data_addr;
     int shmid;
-    shData_t *sh_data;
+    shData_t *sh_header;
+    std::vector<shData_t *>vec_sh_data;
     // CodedInputStream *coded_input;
     char *pkt;
     int pkt_size;

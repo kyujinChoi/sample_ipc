@@ -23,6 +23,7 @@ message PointXYZIRL {
 message PointCloud {
     repeated PointXYZIRL points = 1;
 }
+
 message LogEvent
 {
     bool log_event = 1;

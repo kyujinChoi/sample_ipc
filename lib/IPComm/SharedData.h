@@ -1,4 +1,3 @@
-
 #ifndef _IPC_DATA_H_
 #define _IPC_DATA_H_
 
@@ -26,7 +25,8 @@ typedef struct SharedData
     enum MessageType
     {
         POINTCLOUD,
-        LOG_EVENT
+        LOG_EVENT,
+        MAX_NUM
     };
 
     typedef struct Header
@@ -37,9 +37,10 @@ typedef struct SharedData
 
     header_t *header;
     void *body;
+    unsigned int type;
+    unsigned int cnt;
     // umsg::PointCloud *body;
-    
-    SharedData(int type)
+    SharedData()
     {
         header = (header_t *)malloc(sizeof(header_t));
         if (header == nullptr) 
@@ -48,12 +49,32 @@ typedef struct SharedData
             exit(EXIT_FAILURE);
         }
         memset(header, 0, sizeof(header_t));
-        if(type == POINTCLOUD)
-            body = new umsg::PointCloud();
-        else if(type == LOG_EVENT)
-            body = new umsg::LogEvent();
-        // TODO
+        body = nullptr;
+        cnt = 0;
+    }
+    SharedData(int type_)
+    {
+        header = (header_t *)malloc(sizeof(header_t));
+        if (header == nullptr) 
+        {
+            std::cerr << "Failed to allocate memory for SharedData!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        memset(header, 0, sizeof(header_t));
+        initBody(type_);
+        type = type_;
+        cnt = 0;
         // std::memcpy(body->msg, tmp, sizeof(umsg::sample));
+    }
+    void initBody(unsigned int type_)
+    {
+        if(type_ == POINTCLOUD)
+            body = new umsg::PointCloud();
+        else if(type_ == LOG_EVENT)
+            body = new umsg::LogEvent();
+        
+        type = type_;
+        return;
     }
     
     ~SharedData()
