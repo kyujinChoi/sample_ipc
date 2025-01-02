@@ -1,4 +1,4 @@
-# Message communication using Shared Memory
+# Message Communication using Shared Memory
 
 ## Install
 ```sudo apt install -y protobuf-compiler```
