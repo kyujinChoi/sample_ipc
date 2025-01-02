@@ -5,18 +5,21 @@
 
 
 ## Build
-```mkdir build```
-
-```cd build; cmake ..; make```
+```
+mkdir build
+cd build; cmake ..; make
+```
 
 ## Run
 #### 1. Server
-```cd build/bin```
-
-```./ipc_server```
+```
+cd build/bin
+./ipc_server
+```
 
 #### 2. Client
-```cd build/bin```
-
-```./ipc_client```
+```
+cd build/bin
+./ipc_client
+```
 
