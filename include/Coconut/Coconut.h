@@ -23,13 +23,11 @@
 //! --------------------------------------------------------------
 //! coconut::coconut.cout("hello\n", coconut::Color::RED);
 //! coconut::coconut.cout(359, coconut::Color::RED).endl().endl();
-//! coconut::coconut.cout(1453.687, coconut::Color::RED, coconut::Style::BOLD).endl(3);
+//! coconut::coconut.cout(1453.687, coconut::Color::RED).endl(3);
 //!
 
-// TODO: update on same line
-// TODO: Find Root(GROOT)
 
-namespace coconut // colorcout looks similar to coconut :) cute
+namespace coconut //colorcout looks similar to coconut :) cute
 {
     enum class Style
     {
@@ -54,36 +52,35 @@ namespace coconut // colorcout looks similar to coconut :) cute
     };
     class ConsoleColor
     {
-    public:
-        ConsoleColor &cout(boost::variant<int, std::string, double> text, Color fg = Color::DEFAULT, Style style = Style::DEFAULT, Color bg = Color::DEFAULT)
-        {
-            std::cout << setStyle(style, fg, bg) << text << reset();
-            return *this;
-        }
-        ConsoleColor &endl()
-        {
-            std::cout << reset() << std::endl;
-            return *this;
-        }
-        ConsoleColor &endl(int count)
-        {
-            std::cout << reset();
-            for (int i = 0; i < count; ++i)
+        public:
+            ConsoleColor& cout(boost::variant<int, std::string, double> text, Color fg = Color::DEFAULT, Style style = Style::DEFAULT, Color bg = Color::DEFAULT) 
             {
-                std::cout << std::endl;
+                std::cout << setStyle(style, fg, bg) << text << reset();
+                return *this;
             }
-            return *this;
-        }
-        std::string setStyle(Style style, Color fg = Color::DEFAULT, Color bg = Color::DEFAULT)
-        {
-            return "\e[" + std::to_string(static_cast<int>(style)) + ";" +
-                   std::to_string(static_cast<int>(fg)) + ";" +
-                   std::to_string(static_cast<int>(bg) + 10) + "m";
-        }
-        std::string reset()
-        {
-            return "\e[0m";
-        }
+            ConsoleColor& endl() 
+            {
+                std::cout << reset() <<std::endl;
+                return *this;
+            }
+            ConsoleColor& endl(int count) 
+            {
+                std::cout << reset();
+                for (int i = 0; i < count; ++i) {
+                    std::cout << std::endl;
+                }
+                return *this;
+            }
+            std::string setStyle(Style style, Color fg = Color::DEFAULT, Color bg = Color::DEFAULT)
+            {
+                return "\e[" + std::to_string(static_cast<int>(style)) + ";" +
+                    std::to_string(static_cast<int>(fg)) + ";" +
+                    std::to_string(static_cast<int>(bg) + 10) + "m";
+            }
+            std::string reset()
+            {
+                return "\e[0m";
+            }
     };
     static ConsoleColor coconut;
 };

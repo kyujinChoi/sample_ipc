@@ -26,6 +26,8 @@ typedef struct SharedData
     {
         POINTCLOUD,
         LOG_EVENT,
+        LOG_TOPICS,
+        TOPIC_LIST,
         MAX_NUM
     };
 
@@ -72,6 +74,10 @@ typedef struct SharedData
             body = new umsg::PointCloud();
         else if(type_ == LOG_EVENT)
             body = new umsg::LogEvent();
+        else if(type_ == LOG_TOPICS)
+            body = new umsg::TopicList();
+        else if(type_ == TOPIC_LIST)
+            body = new umsg::TopicList();
         
         type = type_;
         return;

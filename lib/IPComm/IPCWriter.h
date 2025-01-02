@@ -28,9 +28,9 @@ public:
 private:
     char *data_addr;
     int shmid;
-
     shData_t *sh_header;
     char* pkt;
     size_t pkt_size;
+    int prev_clients = 0;
 };
 #endif

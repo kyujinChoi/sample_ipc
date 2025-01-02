@@ -21,7 +21,7 @@ find_package(LibXml2 REQUIRED)
 
 set(INCL ${CMAKE_SOURCE_DIR}/include )
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/IPComm)
-set(INCL ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/app ${LIBXML2_INCLUDE_DIR})
+set(INCL ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/app)
 set(LIBS  pthread IPComm)
 set(DEPENDS IPComm)
 add_subdirectory(${CMAKE_SOURCE_DIR}/app/server)

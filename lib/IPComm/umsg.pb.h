@@ -47,7 +47,7 @@ struct TableStruct_umsg_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -64,194 +64,23 @@ extern PointCloudDefaultTypeInternal _PointCloud_default_instance_;
 class PointXYZIRL;
 class PointXYZIRLDefaultTypeInternal;
 extern PointXYZIRLDefaultTypeInternal _PointXYZIRL_default_instance_;
-class sample;
-class sampleDefaultTypeInternal;
-extern sampleDefaultTypeInternal _sample_default_instance_;
+class Topic;
+class TopicDefaultTypeInternal;
+extern TopicDefaultTypeInternal _Topic_default_instance_;
+class TopicList;
+class TopicListDefaultTypeInternal;
+extern TopicListDefaultTypeInternal _TopicList_default_instance_;
 }  // namespace umsg
 PROTOBUF_NAMESPACE_OPEN
 template<> ::umsg::LogEvent* Arena::CreateMaybeMessage<::umsg::LogEvent>(Arena*);
 template<> ::umsg::PointCloud* Arena::CreateMaybeMessage<::umsg::PointCloud>(Arena*);
 template<> ::umsg::PointXYZIRL* Arena::CreateMaybeMessage<::umsg::PointXYZIRL>(Arena*);
-template<> ::umsg::sample* Arena::CreateMaybeMessage<::umsg::sample>(Arena*);
+template<> ::umsg::Topic* Arena::CreateMaybeMessage<::umsg::Topic>(Arena*);
+template<> ::umsg::TopicList* Arena::CreateMaybeMessage<::umsg::TopicList>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace umsg {
 
 // ===================================================================
-
-class sample PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.sample) */ {
- public:
-  inline sample() : sample(nullptr) {};
-  virtual ~sample();
-
-  sample(const sample& from);
-  sample(sample&& from) noexcept
-    : sample() {
-    *this = ::std::move(from);
-  }
-
-  inline sample& operator=(const sample& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline sample& operator=(sample&& from) noexcept {
-    if (GetArena() == from.GetArena()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return GetMetadataStatic().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return GetMetadataStatic().reflection;
-  }
-  static const sample& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const sample* internal_default_instance() {
-    return reinterpret_cast<const sample*>(
-               &_sample_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    0;
-
-  friend void swap(sample& a, sample& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(sample* other) {
-    if (other == this) return;
-    if (GetArena() == other->GetArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(sample* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline sample* New() const final {
-    return CreateMaybeMessage<sample>(nullptr);
-  }
-
-  sample* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<sample>(arena);
-  }
-  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const sample& from);
-  void MergeFrom(const sample& from);
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  inline void SharedCtor();
-  inline void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(sample* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "umsg.sample";
-  }
-  protected:
-  explicit sample(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-  private:
-  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_umsg_2eproto);
-    return ::descriptor_table_umsg_2eproto.file_level_metadata[kIndexInFileMessages];
-  }
-
-  public:
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kMsgFieldNumber = 3,
-    kClientsFieldNumber = 1,
-    kReaderCntFieldNumber = 2,
-  };
-  // string _msg = 3;
-  void clear__msg();
-  const std::string& _msg() const;
-  void set__msg(const std::string& value);
-  void set__msg(std::string&& value);
-  void set__msg(const char* value);
-  void set__msg(const char* value, size_t size);
-  std::string* mutable__msg();
-  std::string* release__msg();
-  void set_allocated__msg(std::string* _msg);
-  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
-  "    string fields are deprecated and will be removed in a"
-  "    future release.")
-  std::string* unsafe_arena_release__msg();
-  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
-  "    string fields are deprecated and will be removed in a"
-  "    future release.")
-  void unsafe_arena_set_allocated__msg(
-      std::string* _msg);
-  private:
-  const std::string& _internal__msg() const;
-  void _internal_set__msg(const std::string& value);
-  std::string* _internal_mutable__msg();
-  public:
-
-  // uint32 _clients = 1;
-  void clear__clients();
-  ::PROTOBUF_NAMESPACE_ID::uint32 _clients() const;
-  void set__clients(::PROTOBUF_NAMESPACE_ID::uint32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal__clients() const;
-  void _internal_set__clients(::PROTOBUF_NAMESPACE_ID::uint32 value);
-  public:
-
-  // uint32 _reader_cnt = 2;
-  void clear__reader_cnt();
-  ::PROTOBUF_NAMESPACE_ID::uint32 _reader_cnt() const;
-  void set__reader_cnt(::PROTOBUF_NAMESPACE_ID::uint32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal__reader_cnt() const;
-  void _internal_set__reader_cnt(::PROTOBUF_NAMESPACE_ID::uint32 value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:umsg.sample)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr _msg_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 _clients_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 _reader_cnt_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_umsg_2eproto;
-};
-// -------------------------------------------------------------------
 
 class PointXYZIRL PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.PointXYZIRL) */ {
@@ -295,7 +124,7 @@ class PointXYZIRL PROTOBUF_FINAL :
                &_PointXYZIRL_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    0;
 
   friend void swap(PointXYZIRL& a, PointXYZIRL& b) {
     a.Swap(&b);
@@ -487,7 +316,7 @@ class PointCloud PROTOBUF_FINAL :
                &_PointCloud_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    1;
 
   friend void swap(PointCloud& a, PointCloud& b) {
     a.Swap(&b);
@@ -633,7 +462,7 @@ class LogEvent PROTOBUF_FINAL :
                &_LogEvent_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    2;
 
   friend void swap(LogEvent& a, LogEvent& b) {
     a.Swap(&b);
@@ -704,32 +533,58 @@ class LogEvent PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kObsolFieldNumber = 2,
+    kTimeStampFieldNumber = 2,
+    kPathFieldNumber = 3,
     kLogEventFieldNumber = 1,
   };
-  // string obsol = 2;
-  void clear_obsol();
-  const std::string& obsol() const;
-  void set_obsol(const std::string& value);
-  void set_obsol(std::string&& value);
-  void set_obsol(const char* value);
-  void set_obsol(const char* value, size_t size);
-  std::string* mutable_obsol();
-  std::string* release_obsol();
-  void set_allocated_obsol(std::string* obsol);
+  // string time_stamp = 2;
+  void clear_time_stamp();
+  const std::string& time_stamp() const;
+  void set_time_stamp(const std::string& value);
+  void set_time_stamp(std::string&& value);
+  void set_time_stamp(const char* value);
+  void set_time_stamp(const char* value, size_t size);
+  std::string* mutable_time_stamp();
+  std::string* release_time_stamp();
+  void set_allocated_time_stamp(std::string* time_stamp);
   GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
   "    string fields are deprecated and will be removed in a"
   "    future release.")
-  std::string* unsafe_arena_release_obsol();
+  std::string* unsafe_arena_release_time_stamp();
   GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
   "    string fields are deprecated and will be removed in a"
   "    future release.")
-  void unsafe_arena_set_allocated_obsol(
-      std::string* obsol);
+  void unsafe_arena_set_allocated_time_stamp(
+      std::string* time_stamp);
   private:
-  const std::string& _internal_obsol() const;
-  void _internal_set_obsol(const std::string& value);
-  std::string* _internal_mutable_obsol();
+  const std::string& _internal_time_stamp() const;
+  void _internal_set_time_stamp(const std::string& value);
+  std::string* _internal_mutable_time_stamp();
+  public:
+
+  // string path = 3;
+  void clear_path();
+  const std::string& path() const;
+  void set_path(const std::string& value);
+  void set_path(std::string&& value);
+  void set_path(const char* value);
+  void set_path(const char* value, size_t size);
+  std::string* mutable_path();
+  std::string* release_path();
+  void set_allocated_path(std::string* path);
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  std::string* unsafe_arena_release_path();
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  void unsafe_arena_set_allocated_path(
+      std::string* path);
+  private:
+  const std::string& _internal_path() const;
+  void _internal_set_path(const std::string& value);
+  std::string* _internal_mutable_path();
   public:
 
   // bool log_event = 1;
@@ -748,8 +603,346 @@ class LogEvent PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr obsol_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr time_stamp_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr path_;
   bool log_event_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_umsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Topic PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.Topic) */ {
+ public:
+  inline Topic() : Topic(nullptr) {};
+  virtual ~Topic();
+
+  Topic(const Topic& from);
+  Topic(Topic&& from) noexcept
+    : Topic() {
+    *this = ::std::move(from);
+  }
+
+  inline Topic& operator=(const Topic& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Topic& operator=(Topic&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const Topic& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Topic* internal_default_instance() {
+    return reinterpret_cast<const Topic*>(
+               &_Topic_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(Topic& a, Topic& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Topic* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(Topic* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Topic* New() const final {
+    return CreateMaybeMessage<Topic>(nullptr);
+  }
+
+  Topic* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Topic>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const Topic& from);
+  void MergeFrom(const Topic& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Topic* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "umsg.Topic";
+  }
+  protected:
+  explicit Topic(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_umsg_2eproto);
+    return ::descriptor_table_umsg_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTopicFieldNumber = 1,
+    kMsgFieldNumber = 3,
+    kHzFieldNumber = 2,
+  };
+  // string topic = 1;
+  void clear_topic();
+  const std::string& topic() const;
+  void set_topic(const std::string& value);
+  void set_topic(std::string&& value);
+  void set_topic(const char* value);
+  void set_topic(const char* value, size_t size);
+  std::string* mutable_topic();
+  std::string* release_topic();
+  void set_allocated_topic(std::string* topic);
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  std::string* unsafe_arena_release_topic();
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  void unsafe_arena_set_allocated_topic(
+      std::string* topic);
+  private:
+  const std::string& _internal_topic() const;
+  void _internal_set_topic(const std::string& value);
+  std::string* _internal_mutable_topic();
+  public:
+
+  // string msg = 3;
+  void clear_msg();
+  const std::string& msg() const;
+  void set_msg(const std::string& value);
+  void set_msg(std::string&& value);
+  void set_msg(const char* value);
+  void set_msg(const char* value, size_t size);
+  std::string* mutable_msg();
+  std::string* release_msg();
+  void set_allocated_msg(std::string* msg);
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  std::string* unsafe_arena_release_msg();
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  void unsafe_arena_set_allocated_msg(
+      std::string* msg);
+  private:
+  const std::string& _internal_msg() const;
+  void _internal_set_msg(const std::string& value);
+  std::string* _internal_mutable_msg();
+  public:
+
+  // int32 hz = 2;
+  void clear_hz();
+  ::PROTOBUF_NAMESPACE_ID::int32 hz() const;
+  void set_hz(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_hz() const;
+  void _internal_set_hz(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:umsg.Topic)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr topic_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+  ::PROTOBUF_NAMESPACE_ID::int32 hz_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_umsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class TopicList PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:umsg.TopicList) */ {
+ public:
+  inline TopicList() : TopicList(nullptr) {};
+  virtual ~TopicList();
+
+  TopicList(const TopicList& from);
+  TopicList(TopicList&& from) noexcept
+    : TopicList() {
+    *this = ::std::move(from);
+  }
+
+  inline TopicList& operator=(const TopicList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TopicList& operator=(TopicList&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const TopicList& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const TopicList* internal_default_instance() {
+    return reinterpret_cast<const TopicList*>(
+               &_TopicList_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(TopicList& a, TopicList& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TopicList* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TopicList* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TopicList* New() const final {
+    return CreateMaybeMessage<TopicList>(nullptr);
+  }
+
+  TopicList* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TopicList>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const TopicList& from);
+  void MergeFrom(const TopicList& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TopicList* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "umsg.TopicList";
+  }
+  protected:
+  explicit TopicList(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_umsg_2eproto);
+    return ::descriptor_table_umsg_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTopicsFieldNumber = 1,
+  };
+  // repeated .umsg.Topic topics = 1;
+  int topics_size() const;
+  private:
+  int _internal_topics_size() const;
+  public:
+  void clear_topics();
+  ::umsg::Topic* mutable_topics(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Topic >*
+      mutable_topics();
+  private:
+  const ::umsg::Topic& _internal_topics(int index) const;
+  ::umsg::Topic* _internal_add_topics();
+  public:
+  const ::umsg::Topic& topics(int index) const;
+  ::umsg::Topic* add_topics();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Topic >&
+      topics() const;
+
+  // @@protoc_insertion_point(class_scope:umsg.TopicList)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Topic > topics_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_umsg_2eproto;
 };
@@ -762,131 +955,6 @@ class LogEvent PROTOBUF_FINAL :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// sample
-
-// uint32 _clients = 1;
-inline void sample::clear__clients() {
-  _clients_ = 0u;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint32 sample::_internal__clients() const {
-  return _clients_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint32 sample::_clients() const {
-  // @@protoc_insertion_point(field_get:umsg.sample._clients)
-  return _internal__clients();
-}
-inline void sample::_internal_set__clients(::PROTOBUF_NAMESPACE_ID::uint32 value) {
-  
-  _clients_ = value;
-}
-inline void sample::set__clients(::PROTOBUF_NAMESPACE_ID::uint32 value) {
-  _internal_set__clients(value);
-  // @@protoc_insertion_point(field_set:umsg.sample._clients)
-}
-
-// uint32 _reader_cnt = 2;
-inline void sample::clear__reader_cnt() {
-  _reader_cnt_ = 0u;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint32 sample::_internal__reader_cnt() const {
-  return _reader_cnt_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint32 sample::_reader_cnt() const {
-  // @@protoc_insertion_point(field_get:umsg.sample._reader_cnt)
-  return _internal__reader_cnt();
-}
-inline void sample::_internal_set__reader_cnt(::PROTOBUF_NAMESPACE_ID::uint32 value) {
-  
-  _reader_cnt_ = value;
-}
-inline void sample::set__reader_cnt(::PROTOBUF_NAMESPACE_ID::uint32 value) {
-  _internal_set__reader_cnt(value);
-  // @@protoc_insertion_point(field_set:umsg.sample._reader_cnt)
-}
-
-// string _msg = 3;
-inline void sample::clear__msg() {
-  _msg_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline const std::string& sample::_msg() const {
-  // @@protoc_insertion_point(field_get:umsg.sample._msg)
-  return _internal__msg();
-}
-inline void sample::set__msg(const std::string& value) {
-  _internal_set__msg(value);
-  // @@protoc_insertion_point(field_set:umsg.sample._msg)
-}
-inline std::string* sample::mutable__msg() {
-  // @@protoc_insertion_point(field_mutable:umsg.sample._msg)
-  return _internal_mutable__msg();
-}
-inline const std::string& sample::_internal__msg() const {
-  return _msg_.Get();
-}
-inline void sample::_internal_set__msg(const std::string& value) {
-  
-  _msg_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
-}
-inline void sample::set__msg(std::string&& value) {
-  
-  _msg_.Set(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:umsg.sample._msg)
-}
-inline void sample::set__msg(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  _msg_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
-              GetArena());
-  // @@protoc_insertion_point(field_set_char:umsg.sample._msg)
-}
-inline void sample::set__msg(const char* value,
-    size_t size) {
-  
-  _msg_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:umsg.sample._msg)
-}
-inline std::string* sample::_internal_mutable__msg() {
-  
-  return _msg_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline std::string* sample::release__msg() {
-  // @@protoc_insertion_point(field_release:umsg.sample._msg)
-  return _msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void sample::set_allocated__msg(std::string* _msg) {
-  if (_msg != nullptr) {
-    
-  } else {
-    
-  }
-  _msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), _msg,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:umsg.sample._msg)
-}
-inline std::string* sample::unsafe_arena_release__msg() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.sample._msg)
-  GOOGLE_DCHECK(GetArena() != nullptr);
-  
-  return _msg_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      GetArena());
-}
-inline void sample::unsafe_arena_set_allocated__msg(
-    std::string* _msg) {
-  GOOGLE_DCHECK(GetArena() != nullptr);
-  if (_msg != nullptr) {
-    
-  } else {
-    
-  }
-  _msg_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      _msg, GetArena());
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.sample._msg)
-}
-
-// -------------------------------------------------------------------
-
 // PointXYZIRL
 
 // float x = 1;
@@ -1076,90 +1144,402 @@ inline void LogEvent::set_log_event(bool value) {
   // @@protoc_insertion_point(field_set:umsg.LogEvent.log_event)
 }
 
-// string obsol = 2;
-inline void LogEvent::clear_obsol() {
-  obsol_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+// string time_stamp = 2;
+inline void LogEvent::clear_time_stamp() {
+  time_stamp_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline const std::string& LogEvent::obsol() const {
-  // @@protoc_insertion_point(field_get:umsg.LogEvent.obsol)
-  return _internal_obsol();
+inline const std::string& LogEvent::time_stamp() const {
+  // @@protoc_insertion_point(field_get:umsg.LogEvent.time_stamp)
+  return _internal_time_stamp();
 }
-inline void LogEvent::set_obsol(const std::string& value) {
-  _internal_set_obsol(value);
-  // @@protoc_insertion_point(field_set:umsg.LogEvent.obsol)
+inline void LogEvent::set_time_stamp(const std::string& value) {
+  _internal_set_time_stamp(value);
+  // @@protoc_insertion_point(field_set:umsg.LogEvent.time_stamp)
 }
-inline std::string* LogEvent::mutable_obsol() {
-  // @@protoc_insertion_point(field_mutable:umsg.LogEvent.obsol)
-  return _internal_mutable_obsol();
+inline std::string* LogEvent::mutable_time_stamp() {
+  // @@protoc_insertion_point(field_mutable:umsg.LogEvent.time_stamp)
+  return _internal_mutable_time_stamp();
 }
-inline const std::string& LogEvent::_internal_obsol() const {
-  return obsol_.Get();
+inline const std::string& LogEvent::_internal_time_stamp() const {
+  return time_stamp_.Get();
 }
-inline void LogEvent::_internal_set_obsol(const std::string& value) {
+inline void LogEvent::_internal_set_time_stamp(const std::string& value) {
   
-  obsol_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+  time_stamp_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
 }
-inline void LogEvent::set_obsol(std::string&& value) {
+inline void LogEvent::set_time_stamp(std::string&& value) {
   
-  obsol_.Set(
+  time_stamp_.Set(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:umsg.LogEvent.obsol)
+  // @@protoc_insertion_point(field_set_rvalue:umsg.LogEvent.time_stamp)
 }
-inline void LogEvent::set_obsol(const char* value) {
+inline void LogEvent::set_time_stamp(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  obsol_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+  time_stamp_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
               GetArena());
-  // @@protoc_insertion_point(field_set_char:umsg.LogEvent.obsol)
+  // @@protoc_insertion_point(field_set_char:umsg.LogEvent.time_stamp)
 }
-inline void LogEvent::set_obsol(const char* value,
+inline void LogEvent::set_time_stamp(const char* value,
     size_t size) {
   
-  obsol_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+  time_stamp_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
       reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:umsg.LogEvent.obsol)
+  // @@protoc_insertion_point(field_set_pointer:umsg.LogEvent.time_stamp)
 }
-inline std::string* LogEvent::_internal_mutable_obsol() {
+inline std::string* LogEvent::_internal_mutable_time_stamp() {
   
-  return obsol_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  return time_stamp_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline std::string* LogEvent::release_obsol() {
-  // @@protoc_insertion_point(field_release:umsg.LogEvent.obsol)
-  return obsol_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+inline std::string* LogEvent::release_time_stamp() {
+  // @@protoc_insertion_point(field_release:umsg.LogEvent.time_stamp)
+  return time_stamp_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline void LogEvent::set_allocated_obsol(std::string* obsol) {
-  if (obsol != nullptr) {
+inline void LogEvent::set_allocated_time_stamp(std::string* time_stamp) {
+  if (time_stamp != nullptr) {
     
   } else {
     
   }
-  obsol_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), obsol,
+  time_stamp_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), time_stamp,
       GetArena());
-  // @@protoc_insertion_point(field_set_allocated:umsg.LogEvent.obsol)
+  // @@protoc_insertion_point(field_set_allocated:umsg.LogEvent.time_stamp)
 }
-inline std::string* LogEvent::unsafe_arena_release_obsol() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.LogEvent.obsol)
+inline std::string* LogEvent::unsafe_arena_release_time_stamp() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.LogEvent.time_stamp)
   GOOGLE_DCHECK(GetArena() != nullptr);
   
-  return obsol_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+  return time_stamp_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       GetArena());
 }
-inline void LogEvent::unsafe_arena_set_allocated_obsol(
-    std::string* obsol) {
+inline void LogEvent::unsafe_arena_set_allocated_time_stamp(
+    std::string* time_stamp) {
   GOOGLE_DCHECK(GetArena() != nullptr);
-  if (obsol != nullptr) {
+  if (time_stamp != nullptr) {
     
   } else {
     
   }
-  obsol_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      obsol, GetArena());
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.LogEvent.obsol)
+  time_stamp_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      time_stamp, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.LogEvent.time_stamp)
+}
+
+// string path = 3;
+inline void LogEvent::clear_path() {
+  path_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& LogEvent::path() const {
+  // @@protoc_insertion_point(field_get:umsg.LogEvent.path)
+  return _internal_path();
+}
+inline void LogEvent::set_path(const std::string& value) {
+  _internal_set_path(value);
+  // @@protoc_insertion_point(field_set:umsg.LogEvent.path)
+}
+inline std::string* LogEvent::mutable_path() {
+  // @@protoc_insertion_point(field_mutable:umsg.LogEvent.path)
+  return _internal_mutable_path();
+}
+inline const std::string& LogEvent::_internal_path() const {
+  return path_.Get();
+}
+inline void LogEvent::_internal_set_path(const std::string& value) {
+  
+  path_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void LogEvent::set_path(std::string&& value) {
+  
+  path_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:umsg.LogEvent.path)
+}
+inline void LogEvent::set_path(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  path_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:umsg.LogEvent.path)
+}
+inline void LogEvent::set_path(const char* value,
+    size_t size) {
+  
+  path_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:umsg.LogEvent.path)
+}
+inline std::string* LogEvent::_internal_mutable_path() {
+  
+  return path_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* LogEvent::release_path() {
+  // @@protoc_insertion_point(field_release:umsg.LogEvent.path)
+  return path_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void LogEvent::set_allocated_path(std::string* path) {
+  if (path != nullptr) {
+    
+  } else {
+    
+  }
+  path_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), path,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:umsg.LogEvent.path)
+}
+inline std::string* LogEvent::unsafe_arena_release_path() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.LogEvent.path)
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  
+  return path_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      GetArena());
+}
+inline void LogEvent::unsafe_arena_set_allocated_path(
+    std::string* path) {
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  if (path != nullptr) {
+    
+  } else {
+    
+  }
+  path_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      path, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.LogEvent.path)
+}
+
+// -------------------------------------------------------------------
+
+// Topic
+
+// string topic = 1;
+inline void Topic::clear_topic() {
+  topic_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& Topic::topic() const {
+  // @@protoc_insertion_point(field_get:umsg.Topic.topic)
+  return _internal_topic();
+}
+inline void Topic::set_topic(const std::string& value) {
+  _internal_set_topic(value);
+  // @@protoc_insertion_point(field_set:umsg.Topic.topic)
+}
+inline std::string* Topic::mutable_topic() {
+  // @@protoc_insertion_point(field_mutable:umsg.Topic.topic)
+  return _internal_mutable_topic();
+}
+inline const std::string& Topic::_internal_topic() const {
+  return topic_.Get();
+}
+inline void Topic::_internal_set_topic(const std::string& value) {
+  
+  topic_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void Topic::set_topic(std::string&& value) {
+  
+  topic_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:umsg.Topic.topic)
+}
+inline void Topic::set_topic(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  topic_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:umsg.Topic.topic)
+}
+inline void Topic::set_topic(const char* value,
+    size_t size) {
+  
+  topic_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:umsg.Topic.topic)
+}
+inline std::string* Topic::_internal_mutable_topic() {
+  
+  return topic_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* Topic::release_topic() {
+  // @@protoc_insertion_point(field_release:umsg.Topic.topic)
+  return topic_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void Topic::set_allocated_topic(std::string* topic) {
+  if (topic != nullptr) {
+    
+  } else {
+    
+  }
+  topic_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), topic,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:umsg.Topic.topic)
+}
+inline std::string* Topic::unsafe_arena_release_topic() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.Topic.topic)
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  
+  return topic_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      GetArena());
+}
+inline void Topic::unsafe_arena_set_allocated_topic(
+    std::string* topic) {
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  if (topic != nullptr) {
+    
+  } else {
+    
+  }
+  topic_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      topic, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.Topic.topic)
+}
+
+// int32 hz = 2;
+inline void Topic::clear_hz() {
+  hz_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Topic::_internal_hz() const {
+  return hz_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Topic::hz() const {
+  // @@protoc_insertion_point(field_get:umsg.Topic.hz)
+  return _internal_hz();
+}
+inline void Topic::_internal_set_hz(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  hz_ = value;
+}
+inline void Topic::set_hz(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_hz(value);
+  // @@protoc_insertion_point(field_set:umsg.Topic.hz)
+}
+
+// string msg = 3;
+inline void Topic::clear_msg() {
+  msg_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& Topic::msg() const {
+  // @@protoc_insertion_point(field_get:umsg.Topic.msg)
+  return _internal_msg();
+}
+inline void Topic::set_msg(const std::string& value) {
+  _internal_set_msg(value);
+  // @@protoc_insertion_point(field_set:umsg.Topic.msg)
+}
+inline std::string* Topic::mutable_msg() {
+  // @@protoc_insertion_point(field_mutable:umsg.Topic.msg)
+  return _internal_mutable_msg();
+}
+inline const std::string& Topic::_internal_msg() const {
+  return msg_.Get();
+}
+inline void Topic::_internal_set_msg(const std::string& value) {
+  
+  msg_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void Topic::set_msg(std::string&& value) {
+  
+  msg_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:umsg.Topic.msg)
+}
+inline void Topic::set_msg(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  msg_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:umsg.Topic.msg)
+}
+inline void Topic::set_msg(const char* value,
+    size_t size) {
+  
+  msg_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:umsg.Topic.msg)
+}
+inline std::string* Topic::_internal_mutable_msg() {
+  
+  return msg_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* Topic::release_msg() {
+  // @@protoc_insertion_point(field_release:umsg.Topic.msg)
+  return msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void Topic::set_allocated_msg(std::string* msg) {
+  if (msg != nullptr) {
+    
+  } else {
+    
+  }
+  msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msg,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:umsg.Topic.msg)
+}
+inline std::string* Topic::unsafe_arena_release_msg() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:umsg.Topic.msg)
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  
+  return msg_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      GetArena());
+}
+inline void Topic::unsafe_arena_set_allocated_msg(
+    std::string* msg) {
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  if (msg != nullptr) {
+    
+  } else {
+    
+  }
+  msg_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      msg, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:umsg.Topic.msg)
+}
+
+// -------------------------------------------------------------------
+
+// TopicList
+
+// repeated .umsg.Topic topics = 1;
+inline int TopicList::_internal_topics_size() const {
+  return topics_.size();
+}
+inline int TopicList::topics_size() const {
+  return _internal_topics_size();
+}
+inline void TopicList::clear_topics() {
+  topics_.Clear();
+}
+inline ::umsg::Topic* TopicList::mutable_topics(int index) {
+  // @@protoc_insertion_point(field_mutable:umsg.TopicList.topics)
+  return topics_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Topic >*
+TopicList::mutable_topics() {
+  // @@protoc_insertion_point(field_mutable_list:umsg.TopicList.topics)
+  return &topics_;
+}
+inline const ::umsg::Topic& TopicList::_internal_topics(int index) const {
+  return topics_.Get(index);
+}
+inline const ::umsg::Topic& TopicList::topics(int index) const {
+  // @@protoc_insertion_point(field_get:umsg.TopicList.topics)
+  return _internal_topics(index);
+}
+inline ::umsg::Topic* TopicList::_internal_add_topics() {
+  return topics_.Add();
+}
+inline ::umsg::Topic* TopicList::add_topics() {
+  // @@protoc_insertion_point(field_add:umsg.TopicList.topics)
+  return _internal_add_topics();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::umsg::Topic >&
+TopicList::topics() const {
+  // @@protoc_insertion_point(field_list:umsg.TopicList.topics)
+  return topics_;
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

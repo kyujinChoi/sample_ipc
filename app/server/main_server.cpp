@@ -29,7 +29,6 @@ int main()
         std::cout << "-----------------------\n";
         if(cnt % SharedData::MAX_NUM == SharedData::POINTCLOUD)
         {
-            
             ((umsg::PointCloud *)point_msg.body)->clear_points();
             for(int i = 0 ; i < 9; i++)
             {
@@ -48,8 +47,8 @@ int main()
         }
         else if(cnt % SharedData::MAX_NUM == SharedData::LOG_EVENT)
         {
-            ((umsg::LogEvent *)log_msg.body)->set_obsol("MESSAGE : " + std::to_string(cnt));
-            std::cout << log_msg.cnt << "'s message = " << ((umsg::LogEvent *)log_msg.body)->obsol() << std::endl;
+            ((umsg::LogEvent *)log_msg.body)->set_time_stamp("MESSAGE : " + std::to_string(cnt));
+            std::cout << log_msg.cnt << "'s message = " << ((umsg::LogEvent *)log_msg.body)->time_stamp() << std::endl;
             ipc->writeBody(SharedData::LOG_EVENT, &log_msg);
         }
         cnt++;

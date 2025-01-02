@@ -1,6 +1,7 @@
 #ifndef _IPC_READER_H_
 #define _IPC_READER_H_
 #include "SharedData.h"
+#include <thread>
 class IPCReader
 {
 public:

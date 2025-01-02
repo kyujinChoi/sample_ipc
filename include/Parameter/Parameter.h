@@ -10,7 +10,6 @@
 #include <math.h>
 #include "Coconut/Coconut.h"
 
-
 #define PI 3.141592
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -23,6 +22,13 @@ public:
     Parameter(){};
     ~Parameter(){};
 
+    bool find(std::string key)
+    {
+        if (params.find(key) == params.end())
+            return false;
+        return true;
+    }
+    
     bool modifyParam(std::string key, boost::variant<int, std::string, double> value)
     {
         if (params.find(key) == params.end())

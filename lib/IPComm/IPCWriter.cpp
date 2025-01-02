@@ -3,10 +3,10 @@
 IPCWriter::IPCWriter(int key)
 {
     param.insertParam("key", key);
-    param.insertParam("sem_ticket_mtx", "/ipc_ticket_mtx");
-    param.insertParam("sem_write_mtx", "/ipc_write_mtx");
-    param.insertParam("sem_update_mtx", "/ipc_update_mtx");
-    param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
+    param.insertParam("sem_ticket_mtx", "/"+std::to_string(key) + "ipc_ticket_mtx");
+    param.insertParam("sem_write_mtx", "/"+std::to_string(key) + "ipc_write_mtx");
+    param.insertParam("sem_update_mtx", "/"+std::to_string(key) + "ipc_update_mtx");
+    param.insertParam("sem_cnt_mtx", "/"+std::to_string(key) + "ipc_cnt_mtx");
 
     sh_header = new shData_t();
     pkt_size = 3*sizeof(int);
@@ -16,6 +16,7 @@ IPCWriter::IPCWriter(int key)
 
     init_sem(this);
     Init();
+    // updateClients();
 }
 IPCWriter::~IPCWriter() { Free(); };
 int IPCWriter::Init()
@@ -91,11 +92,13 @@ int IPCWriter::writeBody(unsigned int type, shData_t *send_msg)
     //     *(umsg::LogEvent *)sh_data->body = *((umsg::LogEvent *)send_msg->body);
 
     serialize(type, send_msg);
-    updateClients();
+    readHeader();
+    
 
     start_write_sem();
     memcpy(data_addr + sizeof(SharedData::Header), pkt, pkt_size);
     end_write_sem();
+    updateClients();
     return 0;
 } 
 
@@ -106,6 +109,10 @@ void IPCWriter::serialize(unsigned int type, shData_t *send_msg)
         msg_siz = ((umsg::PointCloud *)send_msg->body)->ByteSizeLong();
     else if (type == SharedData::LOG_EVENT)
         msg_siz = ((umsg::LogEvent *)send_msg->body)->ByteSizeLong();
+    else if (type == SharedData::LOG_TOPICS)
+        msg_siz = ((umsg::TopicList *)send_msg->body)->ByteSizeLong();
+    else if (type == SharedData::TOPIC_LIST)
+        msg_siz = ((umsg::TopicList *)send_msg->body)->ByteSizeLong();
     
     int hdr_size = google::protobuf::io::CodedOutputStream::VarintSize32(type) 
                     + google::protobuf::io::CodedOutputStream::VarintSize32(msg_siz)
@@ -129,19 +136,23 @@ void IPCWriter::serialize(unsigned int type, shData_t *send_msg)
     if (type == SharedData::POINTCLOUD)
         ((umsg::PointCloud *)send_msg->body)->SerializeToCodedStream(&coded_output);
     else if (type == SharedData::LOG_EVENT)
-        ((umsg::PointCloud *)send_msg->body)->SerializeToCodedStream(&coded_output);
+        ((umsg::LogEvent *)send_msg->body)->SerializeToCodedStream(&coded_output);
+    else if (type == SharedData::LOG_TOPICS)
+        ((umsg::TopicList *)send_msg->body)->SerializeToCodedStream(&coded_output);
+    else if (type == SharedData::TOPIC_LIST)
+        ((umsg::TopicList *)send_msg->body)->SerializeToCodedStream(&coded_output);
+    
     return;
 }
 void IPCWriter::updateClients()
 {
-    static int prev_clients = 0;
-    readHeader();
     int cur_clients = sh_header->header->clients;
-
+    // coconut::coconut.cout("cur_clients = " + std::to_string(cur_clients), coconut::Color::GREEN).endl();
     std::vector<int> erase_idx;
     for (int i = 0; i < vec_client_idx.size(); i++)
     {
         std::string sem_name = param.getParamStr("sem_update_mtx") + std::to_string(vec_client_idx[i]);
+        
         vec_update_mtx[i] = sem_open(sem_name.c_str(), 0);
         if (vec_update_mtx[i] == SEM_FAILED)
         {
@@ -171,6 +182,7 @@ void IPCWriter::updateClients()
         coconut::coconut.cout("Client Entered!\n", coconut::Color::GREEN, coconut::Style::BOLD);
         vec_update_mtx.push_back(sem);
         vec_client_idx.push_back(i);
+        // std::cout << "\t" <<sem_name << ", " << vec_client_idx.size() << std::endl;
     }
     prev_clients = cur_clients;
 
@@ -188,23 +200,18 @@ int IPCWriter::Free()
 }
 void IPCWriter::init_sem(void *pthis)
 {
-    static sem_t *st_write_mtx = nullptr;
-    static sem_t *st_cnt_mtx = nullptr;
-    static sem_t *st_ticket_mtx = nullptr;
-
     IPCWriter *user = (IPCWriter *)pthis;
 
-    st_ticket_mtx = sem_open(user->param.getParamStr("sem_ticket_mtx").c_str(), O_CREAT, 0644, 1);
-    st_write_mtx = sem_open(user->param.getParamStr("sem_write_mtx").c_str(), O_CREAT, 0644, 1);
-    st_cnt_mtx = sem_open(user->param.getParamStr("sem_cnt_mtx").c_str(), O_CREAT, 0644, 1);
-    if (st_ticket_mtx == SEM_FAILED || st_write_mtx == SEM_FAILED || st_cnt_mtx == SEM_FAILED)
+    user->ticket_mtx = sem_open(user->param.getParamStr("sem_ticket_mtx").c_str(), O_CREAT, 0644, 1);
+    user->write_mtx = sem_open(user->param.getParamStr("sem_write_mtx").c_str(), O_CREAT, 0644, 1);
+    user->cnt_mtx = sem_open(user->param.getParamStr("sem_cnt_mtx").c_str(), O_CREAT, 0644, 1);
+    if (user->ticket_mtx == SEM_FAILED || user->write_mtx == SEM_FAILED || user->cnt_mtx == SEM_FAILED)
     {
+        std::cout << param.getParamInt("key") << "'s ";
         perror("init_sem sem_open failed");
         exit(-1);
     }
-    user->ticket_mtx = st_ticket_mtx;
-    user->write_mtx = st_write_mtx;
-    user->cnt_mtx = st_cnt_mtx;
+
     return;
 }
 void IPCWriter::start_write_sem()
@@ -237,6 +244,9 @@ void IPCWriter::free_sem(void *pthis)
 
     sem_close(cnt_mtx);
     sem_unlink(param.getParamStr("sem_cnt_mtx").c_str());
+
+    sem_close(ticket_mtx);
+    sem_unlink(param.getParamStr("sem_ticket_mtx").c_str());
 
     return;
 }

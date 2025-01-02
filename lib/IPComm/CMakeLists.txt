@@ -28,10 +28,7 @@ endforeach(TMP_PATH)
 foreach(TMP_PATH ${CPP_FILES})
 message(STATUS "CPP_FILES : ${CPP_FILES}")
 endforeach(TMP_PATH)
-
-
-
-    # add_executable(${PROJECT_NAME} ${CPP_FILES} app/LogManager/mainwindow.ui)
+# add_executable(${PROJECT_NAME} ${CPP_FILES} app/LogManager/mainwindow.ui)
 # else()
 # add_executable(${PROJECT_NAME} ${CPP_FILES} ${PROTO_SRCS})
 add_library(${PROJECT_NAME} SHARED ${CPP_FILES} ${PROTO_SRCS})
@@ -47,10 +44,7 @@ function(check_file_exists file result)
   endif()
 endfunction()
 
-
-
 foreach(PROTO_HDR ${PROTO_HDRS})
-    
     get_filename_component(PROTO_HDR_NAME ${PROTO_HDR} NAME)
     
     set(PROTO_HDR_NEW ${CMAKE_CURRENT_SOURCE_DIR}/${PROTO_HDR_NAME})
@@ -70,7 +64,6 @@ foreach(PROTO_HDR ${PROTO_HDRS})
     endif()
 endforeach()
 # if(LogManager)
-
 # add_dependencies(${PROJECT_NAME} BagWriter LidarDriver)
 # install(TARGETS
 # ${PROJECT_NAME}

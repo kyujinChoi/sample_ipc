@@ -2,10 +2,10 @@
 IPCReader::IPCReader(int key)
 {
     param.insertParam("key", key);
-    param.insertParam("sem_ticket_mtx", "/ipc_ticket_mtx");
-    param.insertParam("sem_write_mtx", "/ipc_write_mtx");
-    param.insertParam("sem_update_mtx", "/ipc_update_mtx");
-    param.insertParam("sem_cnt_mtx", "/ipc_cnt_mtx");
+    param.insertParam("sem_ticket_mtx", "/"+std::to_string(key) + "ipc_ticket_mtx");
+    param.insertParam("sem_write_mtx", "/"+std::to_string(key) + "ipc_write_mtx");
+    param.insertParam("sem_update_mtx", "/"+std::to_string(key) + "ipc_update_mtx");
+    param.insertParam("sem_cnt_mtx", "/"+std::to_string(key) + "ipc_cnt_mtx");
 
     for(int i = 0 ; i < SharedData::MAX_NUM; i++)
     {
@@ -17,8 +17,15 @@ IPCReader::IPCReader(int key)
     pkt = new char[pkt_size];
     // ais = new google::protobuf::io::ArrayInputStream(pkt, 2 * sizeof(int));
     // coded_input = new google::protobuf::io::CodedInputStream(ais);
-    init_sem(this);
-    Init();
+    std::thread t([](void *pUser)
+    {
+        IPCReader *reader = (IPCReader*)pUser;
+        reader->init_sem(pUser);
+        reader->Init();
+        reader->param.insertParam("is_ready",1);
+    }, this);
+    t.detach();
+    usleep(100*1000);
 }
 IPCReader::~IPCReader() { Free(); }
 int IPCReader::Init()
@@ -45,7 +52,6 @@ int IPCReader::readHeader()
     sem_wait(ticket_mtx);
     memcpy((char *)sh_header->header, (char *)data_addr, sizeof(SharedData::Header));
     sem_post(ticket_mtx);
-
     return 0;
 }
 int IPCReader::writeHeader()
@@ -53,7 +59,6 @@ int IPCReader::writeHeader()
     sem_wait(ticket_mtx);
     memcpy((char *)data_addr, (void *)sh_header->header, sizeof(SharedData::Header));
     sem_post(ticket_mtx);
-
     return 0;
 }
 void IPCReader::readerEnter()
@@ -62,15 +67,13 @@ void IPCReader::readerEnter()
     ++sh_header->header->clients;
     writeHeader();
     param.insertParam("client_id", sh_header->header->clients - 1);
-    static sem_t *st_update_mtx = SEM_FAILED;
-    while (st_update_mtx == SEM_FAILED)
+    update_mtx = SEM_FAILED;
+    while (update_mtx == SEM_FAILED)
     {
         usleep(10);
         std::string id_str = param.getParamStr("sem_update_mtx") + param.getParamStr("client_id");
-        st_update_mtx = sem_open(id_str.c_str(), 0);
+        update_mtx = sem_open(id_str.c_str(), 0);
     }
-
-    update_mtx = st_update_mtx;
     return;
 }
 
@@ -94,7 +97,9 @@ shData_t *IPCReader::ReadBody()
 {
     char buf[20];
     google::protobuf::uint32 hdr[3];
-
+    while(!param.getParamInt("is_ready"))
+        sleep(1);
+    
     wait_for_update();
     start_cnt_sem();
     
@@ -133,6 +138,10 @@ void IPCReader::deserialize(google::protobuf::uint32 *hdr)
         ((umsg::PointCloud *)vec_sh_data[hdr[0]]->body)->ParseFromCodedStream(&coded_input);
     else if (hdr[0] == SharedData::LOG_EVENT)
         ((umsg::LogEvent *)vec_sh_data[hdr[0]]->body)->ParseFromCodedStream(&coded_input);
+    else if (hdr[0] == SharedData::LOG_TOPICS)
+        ((umsg::TopicList *)vec_sh_data[hdr[0]]->body)->ParseFromCodedStream(&coded_input);
+    else if (hdr[0] == SharedData::TOPIC_LIST)
+        ((umsg::TopicList *)vec_sh_data[hdr[0]]->body)->ParseFromCodedStream(&coded_input);
     
     vec_sh_data[hdr[0]]->cnt = hdr[2];
     coded_input.PopLimit(msgLimit);
@@ -141,20 +150,26 @@ void IPCReader::deserialize(google::protobuf::uint32 *hdr)
 
 void IPCReader::init_sem(void *pthis)
 {
-    static sem_t *st_write_mtx = nullptr;
-    static sem_t *st_cnt_mtx = nullptr;
-    static sem_t *st_ticket_mtx = nullptr;
+    sem_t *st_write_mtx = SEM_FAILED;
+    sem_t *st_cnt_mtx = SEM_FAILED;
+    sem_t *st_ticket_mtx = SEM_FAILED;
 
     IPCReader *user = (IPCReader *)pthis;
 
-    st_ticket_mtx = sem_open(user->param.getParamStr("sem_ticket_mtx").c_str(), 0);
-    st_write_mtx = sem_open(user->param.getParamStr("sem_write_mtx").c_str(), 0);
-    st_cnt_mtx = sem_open(user->param.getParamStr("sem_cnt_mtx").c_str(), 0);
-    if (st_ticket_mtx == SEM_FAILED || st_write_mtx == SEM_FAILED || st_cnt_mtx == SEM_FAILED)
+    while(1)
     {
-        perror("init_sem sem_open failed");
-        std::cout << "maybe there is no writer\n";
-        exit(-1);
+        st_ticket_mtx = sem_open(user->param.getParamStr("sem_ticket_mtx").c_str(), 0);
+        st_write_mtx = sem_open(user->param.getParamStr("sem_write_mtx").c_str(), 0);
+        st_cnt_mtx = sem_open(user->param.getParamStr("sem_cnt_mtx").c_str(), 0);
+        if (st_ticket_mtx == SEM_FAILED || st_write_mtx == SEM_FAILED || st_cnt_mtx == SEM_FAILED)
+        {
+            std::cout << param.getParamInt("key") << "'s ";
+            perror("init_sem sem_open failed");
+            std::cout << "maybe there is no writer\n";
+            sleep(1);
+            continue;
+        }
+        break;
     }
     user->ticket_mtx = st_ticket_mtx;
     user->write_mtx = st_write_mtx;
