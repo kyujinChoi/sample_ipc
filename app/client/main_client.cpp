@@ -17,7 +17,7 @@ int main()
     ipc = new IPCReader(1234);
     shData_t *recv_msg;
     // umsg::sample send_msg;
-    int timer_fd = init_timerfd(100);
+    // int timer_fd = init_timerfd(1);
     while(1)
     {
         // ipc->ReadHeader(sh_data->header);
@@ -53,7 +53,7 @@ int main()
         // std::cout << "clients : " << recv_msg->body->x() << std::endl;
         // std::cout << "reader_cnt : " << recv_msg->body->y() << std::endl;
         // std::cout << "msg : " << recv_msg->body->z() << std::endl;
-        wait_timerfd(timer_fd);
+        // wait_timerfd(timer_fd);
     }
     ipc->Free();
     return 0;
