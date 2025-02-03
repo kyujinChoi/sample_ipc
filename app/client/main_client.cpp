@@ -1,4 +1,5 @@
 #include "shCommReader.h"
+
 #include <signal.h>
 
 ShCommReader* m_shReader;
@@ -22,22 +23,21 @@ int main()
     {
         // ipc->ReadHeader(sh_data->header);
         recv_msg = m_shReader->ReadBody();
-        std::cout << "-------------------------?\n";
         if(recv_msg->type == ShData::POINTCLOUD)
         {
             static unsigned int msg_cnt = 0;
             if(msg_cnt == recv_msg->cnt)
                 continue;
-            std::cout << ((umsg::PointCloud *)recv_msg->body)->points_size() << std::endl;
+            // std::cout << ((umsg::PointCloud *)recv_msg->body)->points_size() << std::endl;
             for(int i = 0; i < ((umsg::PointCloud *)recv_msg->body)->points_size();i++)
             {
                 const umsg::PointXYZIRL &p = ((umsg::PointCloud *)recv_msg->body)->points(i); // points의 첫 번째 요소 가져오기
                 float x = p.x(); // x 값 가져오기
                 float y = p.y(); // y 값 가져오기
                 float z = p.z(); // z 값 가져오기
-                std::cout << "x : " << x << std::endl;
-                std::cout << "y : " << y << std::endl;
-                std::cout << "z : " << z << std::endl;
+                // std::cout << "x : " << x << std::endl;
+                // std::cout << "y : " << y << std::endl;
+                // std::cout << "z : " << z << std::endl;
             }
             msg_cnt = recv_msg->cnt;
         }
@@ -46,6 +46,7 @@ int main()
             static unsigned int msg_cnt = 0;
             if(msg_cnt == recv_msg->cnt)
                 continue;
+            std::cout << "-------------------------?\n";
             std::cout << recv_msg->cnt << "'s message = " << ((umsg::LogEvent *)recv_msg->body)->time_stamp() << std::endl;
             msg_cnt = recv_msg->cnt;
         }

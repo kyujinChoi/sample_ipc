@@ -1,6 +1,7 @@
 #include "shCommWriter.h"
-#include <signal.h>
 #include "utils/time.h"
+
+#include <signal.h>
 
 ShCommWriter* m_shWriter;
 
@@ -27,7 +28,7 @@ int main()
         // sh_data = ipc->getSharedData();
         // std::string buf = buffer + std::to_string(cnt++);
         // send_msg.body->type = cnt * 10;
-        std::cout << "-----------------------\n";
+        
         if(cnt % ShData::MAX_NUM == ShData::POINTCLOUD)
         {
             ((umsg::PointCloud *)point_msg.body)->clear_points();
@@ -37,10 +38,10 @@ int main()
                 point->set_x(cnt + i + 0.123);
                 point->set_y(cnt + i + 0.456);
                 point->set_z(cnt + i + 0.789);
-                std::cout << "i = " << i << std::endl;
-                std::cout << "x : " << ((umsg::PointCloud *)point_msg.body)->points(i).x() << std::endl;
-                std::cout << "y : " << ((umsg::PointCloud *)point_msg.body)->points(i).y() << std::endl;
-                std::cout << "z : " << ((umsg::PointCloud *)point_msg.body)->points(i).z() << std::endl;
+                // std::cout << "i = " << i << std::endl;
+                // std::cout << "x : " << ((umsg::PointCloud *)point_msg.body)->points(i).x() << std::endl;
+                // std::cout << "y : " << ((umsg::PointCloud *)point_msg.body)->points(i).y() << std::endl;
+                // std::cout << "z : " << ((umsg::PointCloud *)point_msg.body)->points(i).z() << std::endl;
             }
             // send_msg.body->size = send_msg.body->msg->ByteSizeLong();
 
@@ -49,8 +50,10 @@ int main()
         else if(cnt % ShData::MAX_NUM == ShData::LOG_EVENT)
         {
             ((umsg::LogEvent *)log_msg.body)->set_time_stamp("MESSAGE : " + std::to_string(cnt));
+            std::cout << "-----------------------\n";
             std::cout << log_msg.cnt << "'s message = " << ((umsg::LogEvent *)log_msg.body)->time_stamp() << std::endl;
             m_shWriter->writeBody(ShData::LOG_EVENT, &log_msg);
+            
         }
         cnt++;
         wait_timerfd(timer_fd);
