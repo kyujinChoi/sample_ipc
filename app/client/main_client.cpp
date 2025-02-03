@@ -1,11 +1,11 @@
-#include "IPComm/IPCReader.h"
+#include "shCommReader.h"
 #include <signal.h>
-#include "Util/time.h"
-IPCReader* ipc;
+
+ShCommReader* m_shReader;
 
 void sig_handler(int signo)
 {
-    ipc->Free();
+    m_shReader->Free();
     std::cout <<"signal: " << signo << std::endl;
     exit(0);
 }
@@ -14,16 +14,16 @@ int main()
     signal(SIGINT, sig_handler); // Catch interrupt signal
     std::string buffer = "class test data";
     int cnt = 0;
-    ipc = new IPCReader(1234);
+    m_shReader = new ShCommReader(1234);
     shData_t *recv_msg;
     // umsg::sample send_msg;
     // int timer_fd = init_timerfd(1);
     while(1)
     {
         // ipc->ReadHeader(sh_data->header);
-        recv_msg = ipc->ReadBody();
+        recv_msg = m_shReader->ReadBody();
         std::cout << "-------------------------?\n";
-        if(recv_msg->type == SharedData::POINTCLOUD)
+        if(recv_msg->type == ShData::POINTCLOUD)
         {
             static unsigned int msg_cnt = 0;
             if(msg_cnt == recv_msg->cnt)
@@ -41,7 +41,7 @@ int main()
             }
             msg_cnt = recv_msg->cnt;
         }
-        else if(recv_msg->type == SharedData::LOG_EVENT)
+        else if(recv_msg->type == ShData::LOG_EVENT)
         {
             static unsigned int msg_cnt = 0;
             if(msg_cnt == recv_msg->cnt)
@@ -55,6 +55,6 @@ int main()
         // std::cout << "msg : " << recv_msg->body->z() << std::endl;
         // wait_timerfd(timer_fd);
     }
-    ipc->Free();
+    m_shReader->Free();
     return 0;
 }
