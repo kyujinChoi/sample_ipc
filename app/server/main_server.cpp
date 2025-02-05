@@ -11,9 +11,15 @@ void sig_handler(int signo)
     std::cout <<"signal: " << signo << std::endl;
     exit(0);
 }
+void sig_handler_usr(int signo)
+{
+    m_shWriter->Refresh();
+    std::cout <<"signal: " << signo << std::endl;
+}
 int main()
 {
     signal(SIGINT, sig_handler); // Catch interrupt signal
+    signal(SIGUSR1, sig_handler_usr); 
     std::string buffer = "class test data";
     int cnt = 0;
     m_shWriter = new ShCommWriter(1234);
@@ -24,11 +30,6 @@ int main()
     int timer_fd = init_timerfd(100);
     while(1)
     {
-        // ipc->ReadHeader(sh_data->header);
-        // sh_data = ipc->getSharedData();
-        // std::string buf = buffer + std::to_string(cnt++);
-        // send_msg.body->type = cnt * 10;
-        
         if(cnt % ShData::MAX_NUM == ShData::POINTCLOUD)
         {
             ((umsg::PointCloud *)point_msg.body)->clear_points();
@@ -45,14 +46,14 @@ int main()
             }
             // send_msg.body->size = send_msg.body->msg->ByteSizeLong();
 
-            m_shWriter->writeBody(ShData::POINTCLOUD, &point_msg);
+            m_shWriter->Write(ShData::POINTCLOUD, &point_msg);
         }
         else if(cnt % ShData::MAX_NUM == ShData::LOG_EVENT)
         {
             ((umsg::LogEvent *)log_msg.body)->set_time_stamp("MESSAGE : " + std::to_string(cnt));
             std::cout << "-----------------------\n";
             std::cout << log_msg.cnt << "'s message = " << ((umsg::LogEvent *)log_msg.body)->time_stamp() << std::endl;
-            m_shWriter->writeBody(ShData::LOG_EVENT, &log_msg);
+            m_shWriter->Write(ShData::LOG_EVENT, &log_msg);
             
         }
         cnt++;

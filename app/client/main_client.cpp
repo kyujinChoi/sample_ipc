@@ -10,6 +10,7 @@ void sig_handler(int signo)
     std::cout <<"signal: " << signo << std::endl;
     exit(0);
 }
+
 int main()
 {
     signal(SIGINT, sig_handler); // Catch interrupt signal
@@ -22,7 +23,7 @@ int main()
     while(1)
     {
         // ipc->ReadHeader(sh_data->header);
-        recv_msg = m_shReader->ReadBody();
+        recv_msg = m_shReader->Read();
         if(recv_msg->type == ShData::POINTCLOUD)
         {
             static unsigned int msg_cnt = 0;
